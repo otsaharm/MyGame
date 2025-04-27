@@ -1,15 +1,15 @@
 import SwiftUI
 
-struct Question29: View {
+struct Question33: View {
     @State private var selectedAnswer: Int? = nil
     @State private var showFeedback: Bool = false
     @State private var showFullScreenFeedback: Bool = false
     
     let question = Question(
-        id: 29,
+        id: 33,
         type: "multiple-choice",
-        question: "لو عندك دلو فيه فتحة من تحت، وش تسوي عشان ما تنكب المويه؟",
-        options: ["ما اعبيه", "احط كيسه جوا الدلو", "اسكر الفحته", "ارقع الفتحه"],
+        question: "وش تاسع حرف من الحروف الابجدية؟",
+        options: ["كأن هذا السؤال قد مر علي🤔", "ذ", "ر", "هـ"],
         correctAnswer: 0
     )
     
@@ -86,5 +86,5 @@ struct Question29: View {
 }
 
 #Preview {
-    Question29()
+    Question33()
 } 
