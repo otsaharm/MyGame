@@ -2,81 +2,104 @@ import SwiftUI
 
 struct Question47: View {
     @State private var selectedAnswer: Int? = nil
-    @State private var showFeedback: Bool = false
-    @State private var showFullScreenFeedback: Bool = false
     
-    let question = Question(
-        id: 47,
-        type: "multiple-choice",
-        question: "انتبه! ترا اذا قلته بينكسر!!",
-        options: ["المرايه", "رقبة الثور", "مواعين البيت", "الصمت"],
-        correctAnswer: 0
-    )
+    let answers = [
+        "المرايه",
+        "رقبة الثور",
+        "مواعين البيت",
+        "الصمت" // correct
+    ]
+    let correctIndex = 3
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 20) {
-                Text(question.question)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 20) {
-                    ForEach(0..<question.options.count, id: \.self) { index in
-                        Button(action: {
-                            selectedAnswer = index
-                            showFeedback = true
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                showFullScreenFeedback = true
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                withAnimation(.easeOut(duration: 0.3)) {
-                                    showFullScreenFeedback = false
-                                    selectedAnswer = nil
-                                    showFeedback = false
-                                }
-                            }
-                        }) {
-                            ZStack {
-                                Text(question.options[index])
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(
-                                        selectedAnswer == index ?
-                                        (index == question.correctAnswer ? Color.green : Color.red) :
-                                        Color.white
-                                    )
-                                    .cornerRadius(10)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.blue, lineWidth: 2)
-                                    )
-                                if showFeedback && selectedAnswer == index {
-                                    Image(systemName: index == question.correctAnswer ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                }
-                            }
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                // Top bar just below dynamic island
+                HStack {
+                    Image("BUTTON.HOME")
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .padding(.leading, 24)
+                    Spacer()
+                    HStack(spacing: 4) {
+                        ForEach(0..<3) { _ in
+                            Image("HEART")
+                                .resizable()
+                                .frame(width: 32, height: 32)
                         }
                     }
+                    .padding(.trailing, 24)
                 }
-                .padding()
+                .padding(.top, 50)
+                
+                Spacer(minLength: 0)
+                VStack(spacing: 18) {
+                    // Question number
+                    HStack {
+                        Image("PAGENUMBER")
+                            .resizable()
+                            .frame(width: 48, height: 48)
+                            .overlay(
+                                Text("٤٧")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(.white)
+                            )
+                            .padding(.leading, 32)
+                        Spacer()
+                    }
+                    .padding(.bottom, 8)
+                    
+                    // Question text
+                    Text("انتبه! ترا اذا قلته بينكسر!!")
+                        .font(.system(size: 24, weight: .regular))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 16)
+                    
+                    // Answer buttons grid
+                    VStack(spacing: 20) {
+                        HStack(spacing: 24) {
+                            answerButton(index: 0)
+                            answerButton(index: 1)
+                        }
+                        HStack(spacing: 24) {
+                            answerButton(index: 2)
+                            answerButton(index: 3)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .environment(\.layoutDirection, .rightToLeft)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity, alignment: .center)
+                Spacer(minLength: 150)
             }
-            .blur(radius: showFullScreenFeedback ? 3 : 0)
-            if showFullScreenFeedback, let selected = selectedAnswer {
-                ZStack {
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                    Image(systemName: selected == question.correctAnswer ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .font(.system(size: 200))
-                        .foregroundColor(selected == question.correctAnswer ? .green : .red)
-                        .scaleEffect(showFullScreenFeedback ? 1 : 0.5)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+        }
+        .ignoresSafeArea()
+    }
+    
+    func answerButton(index: Int) -> some View {
+        Button(action: {
+            selectedAnswer = index
+        }) {
+            ZStack {
+                if selectedAnswer == index && index == correctIndex {
+                    Image("BUTTON.CORRECT")
+                        .resizable()
+                        .frame(height: 70)
+                } else {
+                    Image("BUTTON.REGULAR")
+                        .resizable()
+                        .frame(height: 70)
                 }
+                Text(answers[index])
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
             }
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
