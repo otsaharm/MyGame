@@ -8,6 +8,7 @@ struct Question10: View {
     let colors: [Color]
     let colorReveals: [[Int]]
     @State private var pressingColor: Int? = nil
+    @State private var skipCount: Int = 0
 
     init() {
         // User's custom mapping (including spaces)
@@ -30,42 +31,43 @@ struct Question10: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                Spacer(minLength: geometry.size.height * 0.10)
-                VStack(spacing: 12) {
-                    rowView(row: row1, offset: 0)
-                    rowView(row: row2, offset: row1.count)
-                    rowView(row: row3, offset: row1.count + row2.count)
-                }
-                .padding(.horizontal, 8)
-                .environment(\.layoutDirection, .rightToLeft)
-                Spacer()
-                HStack(spacing: 8) {
-                    ForEach(0..<6) { idx in
-                        Rectangle()
-                            .fill(colors[idx])
-                            .frame(width: 50, height: 180)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(Color.black, lineWidth: 2)
-                            )
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { _ in
-                                        pressingColor = idx
-                                    }
-                                    .onEnded { _ in
-                                        pressingColor = nil
-                                    }
-                            )
+        UIforAll(skipCount: $skipCount) {
+            GeometryReader { geometry in
+                VStack {
+                    Spacer(minLength: geometry.size.height * 0.10)
+                    VStack(spacing: 12) {
+                        rowView(row: row1, offset: 0)
+                        rowView(row: row2, offset: row1.count)
+                        rowView(row: row3, offset: row1.count + row2.count)
                     }
+                    .padding(.horizontal, 8)
+                    .environment(\.layoutDirection, .rightToLeft)
+                    Spacer()
+                    HStack(spacing: 8) {
+                        ForEach(0..<6) { idx in
+                            Rectangle()
+                                .fill(colors[idx])
+                                .frame(width: 50, height: 180)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.black, lineWidth: 2)
+                                )
+                                .gesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onChanged { _ in
+                                            pressingColor = idx
+                                        }
+                                        .onEnded { _ in
+                                            pressingColor = nil
+                                        }
+                                )
+                        }
+                    }
+                    .padding(.bottom, geometry.size.height * 0.08)
                 }
-                .padding(.bottom, geometry.size.height * 0.08)
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
         }
-        .ignoresSafeArea()
     }
 
     // Helper to show a row of letters, offset is the starting index in the full message
