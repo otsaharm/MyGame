@@ -5,6 +5,7 @@ struct Question37: View {
     @State private var draggedKeyIndex: Int? = nil
     @State private var keyOffsets: [CGSize] = Array(repeating: .zero, count: 4)
     @State private var showSuccess: Bool = false
+    @State private var skipCount: Int = 0
     
     let keys = ["KEY.WRONG.1", "KEY.WRONG.2", "KEY.WRONG.3", "KEY.RIGHT"]
     // These positions should be visually tuned for your layout
@@ -21,27 +22,10 @@ struct Question37: View {
     let lockY: CGFloat = 328 + 228.24/2
     
     var body: some View {
-        GeometryReader { geometry in
+        UIforAll(skipCount: $skipCount) {
             ZStack {
-                VStack(spacing: 50) {
-                    // Top bar
-                    HStack {
-                        Image("BUTTON.HOME")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .padding(.leading, 24)
-                        Spacer()
-                        HStack(spacing: 4) {
-                            ForEach(0..<3) { _ in
-                                Image("HEART")
-                                    .resizable()
-                                    .frame(width: 32, height: 32)
-                            }
-                        }
-                        .padding(.trailing, 24)
-                    }
-                    .padding(.top, 50)
-                    // Question number
+                VStack(spacing: 32) {
+                    // Question number and text
                     HStack {
                         Image("PAGENUMBER")
                             .resizable()
@@ -54,13 +38,11 @@ struct Question37: View {
                             .padding(.leading, 32)
                         Spacer()
                     }
-                    .padding(.bottom, 8)
-                    // Question text
+                    .padding(.top, 24)
                     Text("وش المفتاح الصح")
                         .font(.system(size: 24, weight: .bold))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 8)
-                    Spacer()
                 }
                 // Door lock and keys
                 ZStack {
@@ -116,7 +98,6 @@ struct Question37: View {
                 }
             }
         }
-        .ignoresSafeArea()
     }
 }
 

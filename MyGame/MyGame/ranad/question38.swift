@@ -7,6 +7,7 @@ struct Question38: View {
     @State private var sharpenerOffset: CGSize = .zero
     @State private var showBalloon: Bool = true
     @State private var showPop: Bool = false
+    @State private var skipCount: Int = 0
     
     enum PencilState {
         case unsharpened, sharpened
@@ -20,7 +21,7 @@ struct Question38: View {
     let balloonSize = CGSize(width: 200, height: 300)
     
     var body: some View {
-        GeometryReader { geometry in
+        UIforAll(skipCount: $skipCount) {
             ZStack {
                 // Balloon
                 if showBalloon {
