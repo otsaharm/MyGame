@@ -1,36 +1,28 @@
-
-
-
 import SwiftUI
+
 struct question18: View {
     @State private var skipCount = 0
 
     var body: some View {
-        let answers = [  "في الصحراء مع \n فنجال القهوة",
-                            "في ديوان المتنبي",
-                            "فوق السطح\n جنب المكيف",
-                            "داخل مشط الحلاق"]
+        let answers = [
+            "في الصحراء مع \n فنجال القهوة",
+            "في ديوان المتنبي",
+            "فوق السطح\n جنب المكيف",
+            "داخل مشط الحلاق"
+        ]
         let correctAnswerIndex = 3
         let questionText = "أين يمكن أن تجد بيت الشعر؟"
-        let questionNumber: Int // ← تضيف هذا
 
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex, // ✅ صححنا الاسم
             questionText: questionText,
             questionNumber: 18
         )
     }
 }
 
-
-
-
-
 #Preview {
     question18()
 }
-
-
-

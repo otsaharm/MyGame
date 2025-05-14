@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct question7: View {
@@ -11,12 +10,13 @@ struct question7: View {
             "النمل يقولك يا شطور", // <-- هذا هو الصحيح
             "تنطرد لانك كثير"
         ]
-        let correctAnswerIndex = 2 // <-- عدلنا هنا ليطابق الخيار الصحيح
+        let correctAnswerIndex = 2
         let questionText = "اذا فزت بسباق نمل وش بيصير؟"
+
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex,
             questionText: questionText,
             questionNumber: 7
         )

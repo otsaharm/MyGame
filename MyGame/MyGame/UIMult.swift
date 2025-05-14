@@ -3,14 +3,15 @@ import SwiftUI
 struct UIMult: View {
     @Binding var skipCont: Int
     let answers: [String]
-    let correctIndex: Int
-    let questionText: String // معلمة السؤال
-    let questionNumber: Int // معلمة رقم السؤال
+    let correctAnswerIndex: Int
+    let questionText: String
+    let questionNumber: Int
+    var imageName: String? = nil
 
     @State private var selectedAnswer: Int? = nil
     @State private var skipCount: Int = 0
     let maxSkips = 4
-    
+
     var skipBarImageName: String {
         switch skipCount {
         case 0: return "SKIP.BAR.1"
@@ -28,7 +29,7 @@ struct UIMult: View {
                     Image("BUTTON.HOME")
                         .resizable()
                         .frame(width: 44, height: 44)
-                        .padding(.leading, 16) // ضبط المسافة إلى 16
+                        .padding(.leading, 16)
                     Spacer()
                     HStack(spacing: 4) {
                         ForEach(0..<3) { _ in
@@ -37,9 +38,9 @@ struct UIMult: View {
                                 .frame(width: 25, height: 25)
                         }
                     }
-                    .padding(.trailing, 16) // ضبط المسافة إلى 16
+                    .padding(.trailing, 16)
                 }
-                .padding(.top, 70) // إضافة مسافة من الأعلى (إذا لزم الأمر)
+                .padding(.top, 70)
 
                 VStack(spacing: 50) {
                     HStack {
@@ -47,18 +48,28 @@ struct UIMult: View {
                             .resizable()
                             .frame(width: 42, height: 42)
                             .overlay(
-                                Text("\(questionNumber)") // عرض رقم السؤال هنا
+                                Text("\(questionNumber)")
                                     .font(.system(size: 22, weight: .bold))
                                     .foregroundColor(.white)
                             )
                             .padding(.leading, 32)
                         Spacer()
                     }
-                    Text(questionText) // هنا نعرض النص
+
+                    if let imageName = imageName {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 80)
+                            .padding(.top, 90)
+                            .padding(.bottom, -100)
+                    }
+
+                    Text(questionText)
                         .font(.title)
                         .fontWeight(.bold)
                         .padding(.top, 10)
-                    
+
                     VStack(spacing: 20) {
                         HStack(spacing: 24) {
                             answerButton(index: 0)
@@ -74,9 +85,9 @@ struct UIMult: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity, alignment: .center)
+
                 Spacer(minLength: 150)
-                
-                // Skip Bar
+
                 ZStack {
                     Image(skipBarImageName)
                         .resizable()
@@ -87,6 +98,8 @@ struct UIMult: View {
                             withAnimation(.easeInOut(duration: 0.35)) {
                                 if skipCount < maxSkips {
                                     skipCount += 1
+                                    skipCont += 1
+                                    playSound(for: true) // صوت التخطي
                                 }
                             }
                         }) {
@@ -105,13 +118,14 @@ struct UIMult: View {
         }
         .ignoresSafeArea()
     }
-    
+
     func answerButton(index: Int) -> some View {
         Button(action: {
             selectedAnswer = index
+            playSound(for: index == correctAnswerIndex) // صوت الإجابة
         }) {
             ZStack {
-                if selectedAnswer == index && index == correctIndex {
+                if selectedAnswer == index && index == correctAnswerIndex {
                     Image("BUTTON.CORRECT")
                         .resizable()
                         .frame(width: 151.68, height: 81)
@@ -120,10 +134,27 @@ struct UIMult: View {
                         .resizable()
                         .frame(width: 151.68, height: 81)
                 }
-                Text(answers[index])
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
+
+                let answer = answers[index]
+                if answer == "∞" {
+                    Text("∞")
+                        .font(.system(size: 100, weight: .heavy))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                } else if answer == "مرة كبير" {
+                    Text("مرة كبير")
+                        .font(.system(size: 42, weight: .heavy))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                } else {
+                    Text(answer)
+                        .font(.system(size: 27, weight: .bold))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                }
             }
         }
         .buttonStyle(PlainButtonStyle())
@@ -131,9 +162,11 @@ struct UIMult: View {
 }
 
 #Preview {
-    @State var testSkip = 0
-    let answers = ["", "", "", ""]
-    let questionText = ""
-    let questionNumber = 47 // رقم السؤال
-    return UIMult(skipCont: $testSkip, answers: answers, correctIndex: 5, questionText: questionText, questionNumber: questionNumber)
+    UIMult(
+        skipCont: .constant(0),
+        answers: ["مرة كبير", "كبير", "∞", "راسي"],
+        correctAnswerIndex: 2,
+        questionText: "اجابة هذا السؤال كبيرة مره",
+        questionNumber: 23
+    )
 }

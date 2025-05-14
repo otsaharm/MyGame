@@ -1,22 +1,24 @@
 import SwiftUI
+
 struct Question20: View {
     @State private var skipCount = 0
 
     var body: some View {
-        let answers = ["تفاحة", "برتقال", "موز", "عنب"]
-        let correctAnswerIndex = 2
-        let questionText = "ما هي الفاكهة؟"
-        let questionNumber: Int // ← تضيف هذا
+        let answers = ["١+ تخطي", "تجاهل", "-١ حياة", "١+ حياة"]
+        let questionText = "الخيار لك فلها 😉"
+        let questionNumber = 20
+        let correctAnswerIndex = 3 // مؤشر الإجابة الصحيحة ("١+ حياة")
 
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex, // ✅ الاسم الصحيح هنا
             questionText: questionText,
-            questionNumber: 20
+            questionNumber: questionNumber
         )
     }
 }
+
 struct Question20_Previews: PreviewProvider {
     static var previews: some View {
         Question20()

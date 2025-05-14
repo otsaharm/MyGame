@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 
 struct question3: View {
@@ -9,7 +7,7 @@ struct question3: View {
         UIMult(
             skipCont: $skipCount,
             answers: ["هـ", "كان هذا السؤال مر علي 🤔", "ل", "ذ"],
-            correctIndex: 3, // "ذ" هو الصحيح (الزر الرابع)
+            correctAnswerIndex: 3, // "ذ" هو الصحيح (الزر الرابع)
             questionText: "وش تاسع حرف من الحروف الهجائية",
             questionNumber: 3
         )

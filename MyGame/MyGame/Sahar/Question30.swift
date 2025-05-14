@@ -1,131 +1,128 @@
 import SwiftUI
+import AVFoundation
 
-struct Question30: View {
+struct QuestionView: View {
+    @Binding var skipCount: Int
     @State private var answer: String = ""
-    @State private var showFeedback: Bool = false
-    @State private var showFullScreenFeedback: Bool = false
-    @State private var isCorrectAnswer = false
+    @State private var isCorrect = false
+    @State private var audioPlayer: AVAudioPlayer? // لتخزين اللاعب الصوتي
 
-    let question = Question(
-        id: 30,
-        type: "number-input",
-        question: "كم عدد الشهور اللي ٢٨ يوم",
-        options: [],
-        correctAnswer: 12
-    )
-
-    let numberPadKeys = [
-        ["1", "2", "3"],
-        ["4", "5", "6"],
-        ["7", "8", "9"],
-        ["مسح", "0", "ادخال"]
-    ]
+    let questionNumber = 30
+    let questionText = "كم عدد الشهور اللي فيها ٢٨ يوم؟"
+    let correctAnswer = "١٢"
+    let numberButtons = ["مسح","٩", "٨", "٧", "٦", "٥", "٤", "٣", "٢", "٠", "١","تم"]
 
     var body: some View {
         ZStack {
-            VStack(spacing: 20) {
-                Text(question.question)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
-                    .padding()
-
-                TextField("", text: $answer)
-                    .keyboardType(.numberPad)
-                    .frame(width: 250, height: 80)
-                    .border(Color.gray, width: 2)
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .disabled(true)
-
+            UIforAll(skipCount: $skipCount) {
                 VStack(spacing: 10) {
-                    ForEach(numberPadKeys, id: \.self) { row in
-                        HStack(spacing: 10) {
-                            ForEach(row, id: \.self) { key in
-                                Button(action: {
-                                    handleNumberPadInput(key)
-                                }) {
-                                    Text(key)
-                                        .font(.title2)
-                                        .frame(width: key == "Clear" || key == "Enter" ? 70 : 60, height: 60)
-                                        .background(Color.gray.opacity(0.2))
-                                        .cornerRadius(10)
+
+                    // رقم السؤال داخل صورة
+                    HStack {
+                        ZStack {
+                            Image("PAGENUMBER")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                            Text("\(questionNumber)")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        Spacer()
+                    }
+                    .padding(.leading, 24)
+
+                    // نص السؤال فقط (بدون صورة)
+                    Text(questionText)
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 16)
+
+                    // مربع الإجابة داخل صورة box
+                    ZStack {
+                        Image("box")
+                            .resizable()
+                            .frame(width: 300, height: 100)
+
+                        Text(answer)
+                            .font(.largeTitle)
+                            .foregroundColor(.black)
+
+                    
+                    }
+
+                    Spacer()
+
+                    // أزرار الأرقام
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 16) {
+                        ForEach(numberButtons, id: \.self) { number in
+                            Button(action: {
+                                if number == "مسح" {
+                                    answer = "" // مسح الإجابة
+                                    isCorrect = false
+                                } else if number == "تم" {
+                                    // تحقق من الإجابة
+                                    checkAnswer()
+                                } else if answer.count < 3 {
+                                    answer += number
+                                    isCorrect = (answer == correctAnswer)
+                                }
+                            }) {
+                                ZStack {
+                                    Image("numper")
+                                        .resizable()
+                                        .frame(width: 70, height: 70)
+                                        .shadow(radius: 3)
+
+                                    Text(number)
+                                        .font(.title)
+                                        .foregroundColor(.white)
                                 }
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                    }
-                }
-                .padding(.bottom)
 
-                // يمكنك إزالة هذا الزر إذا أردت أن يقوم زر "Enter" بالتحقق
-                /*
-                Button("Check Answer") {
-                    if let userAnswer = Int(answer) {
-                        isCorrectAnswer = userAnswer == question.correctAnswer
-                        showFeedback = true
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                            showFullScreenFeedback = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation(.easeOut(duration: 0.3)) {
-                                showFullScreenFeedback = false
-                                showFeedback = false
+                        if numberButtons.count % 4 != 0 {
+                            ForEach(0..<(4 - numberButtons.count % 4), id: \.self) { _ in
+                                Spacer()
                             }
                         }
-                    } else {
-                        print("Please enter a number")
-                        // You can show an alert here
                     }
-                }
-                .padding()
-                .buttonStyle(.borderedProminent)
-                */
-            }
-            .blur(radius: showFullScreenFeedback ? 3 : 0)
+                    .padding(.horizontal, 20)
 
-            if showFullScreenFeedback {
-                ZStack {
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-
-                    Image(systemName: isCorrectAnswer ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .font(.system(size: 200))
-                        .foregroundColor(isCorrectAnswer ? .green : .red)
-                        .scaleEffect(showFullScreenFeedback ? 1 : 0.5)
+                    Spacer()
                 }
+                .padding(.top, 40)
             }
         }
     }
 
-    func handleNumberPadInput(_ key: String) {
-        switch key {
-        case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-            answer += key
-        case "مسح":
-            answer = "" // يمكنك تعديلها لـ `answer = String(answer.dropLast())` إذا كنت تفضل مسح حرف واحد
-        case "ادخال":
-            if let userAnswer = Int(answer) {
-                isCorrectAnswer = userAnswer == question.correctAnswer
-                showFeedback = true
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                    showFullScreenFeedback = true
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        showFullScreenFeedback = false
-                        showFeedback = false
-                    }
-                }
-            } else {
-                print("")
-                // يمكنك هنا عرض تنبيه للمستخدم
+    // دالة للتحقق من الإجابة وتشغيل الصوت
+    func checkAnswer() {
+        if answer == correctAnswer {
+            isCorrect = true
+            playSound(isCorrect: true) // تشغيل صوت النجاح
+        } else {
+            isCorrect = false
+            playSound(isCorrect: false) // تشغيل صوت الخطأ
+        }
+    }
+
+    // دالة لتشغيل الصوت
+    func playSound(isCorrect: Bool) {
+        let soundName = isCorrect ? "success" : "failure"
+        if let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.play()
+            } catch {
+                print("Error playing sound: \(error)")
             }
-        default:
-            break
         }
     }
 }
 
 #Preview {
-    Question30()
+    @State var previewSkip = 0
+    return QuestionView(skipCount: $previewSkip)
 }

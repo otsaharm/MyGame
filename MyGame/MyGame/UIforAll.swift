@@ -22,7 +22,7 @@ struct UIforAll<Content: View>: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
+            VStack(spacing: 0) { // إزالة الأقواس الخارجية لـ VStack
                 HStack {
                     Image("BUTTON.HOME")
                         .resizable()
@@ -72,9 +72,9 @@ struct UIforAll<Content: View>: View {
                 }
                 .padding(.bottom, 32)
                 .padding(.trailing, -100)
-            }
+            } // نهاية VStack
             .frame(width: geometry.size.width, height: geometry.size.height)
-        }
+        } // نهاية GeometryReader
         .ignoresSafeArea()
     }
 }

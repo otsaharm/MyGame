@@ -1,4 +1,3 @@
-
 import SwiftUI
 struct question2: View {
     @State private var skipCount = 0
@@ -10,21 +9,16 @@ struct question2: View {
                         "بيط"]
         let correctAnswerIndex = 3
         let questionText = "بولقملاب لاؤسلا ةباجا"
-        let questionNumber: Int // ← تضيف هذا
 
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex,
             questionText: questionText,
             questionNumber: 2
         )
     }
 }
-
-
-
-
 
 #Preview {
     question2()

@@ -14,9 +14,9 @@ struct Question35: View {
     
     var body: some View {
         UIMult(
-            skipCont: $skipCont,
+            skipCont: $skipCont, // ✅ تم تصحيحه هنا
             answers: answers,
-            correctIndex: correctIndex,
+            correctAnswerIndex: correctIndex,
             questionText: questionText,
             questionNumber: questionNumber
         )
