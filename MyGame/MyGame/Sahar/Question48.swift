@@ -6,9 +6,9 @@ struct Question48: View {
     private let originalPosition = CGSize(width: 150, height: 250)
     @State private var showCheckmark = false
     @State private var soundPlayed = false // علشان ما يتكرر الصوت كل مرة
-
+    @State private var pageNumber: String = "٤٨"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack {
                 Text("ساعد الولد يروح الحمام")
                     .font(.title)

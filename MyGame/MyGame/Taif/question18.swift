@@ -18,7 +18,7 @@ struct question18: View {
             answers: answers,
             correctAnswerIndex: correctAnswerIndex, // ✅ صححنا الاسم
             questionText: questionText,
-            questionNumber: 18
+            questionNumber: "١٨"
         )
     }
 }

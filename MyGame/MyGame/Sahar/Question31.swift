@@ -10,7 +10,7 @@ struct Question31: View {
     @State private var isDroppedOverAnimals = false
     @State private var showCheckmark = false
     @State private var soundPlayed = false // لمنع تكرار الصوت
-
+    @State private var pageNumber: String = "٢٥"
     let question = Question(
         id: 31,
         type: "multiple-choice",
@@ -20,7 +20,7 @@ struct Question31: View {
     )
 
     var body: some View {
-        return UIforAll(skipCount: $skipCount) {
+        return UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 VStack(spacing: 100) {
                     HStack(spacing: 4) {

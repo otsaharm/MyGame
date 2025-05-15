@@ -11,25 +11,13 @@ struct QuestionView: View {
     let questionText = "كم عدد الشهور اللي فيها ٢٨ يوم؟"
     let correctAnswer = "١٢"
     let numberButtons = ["مسح","٩", "٨", "٧", "٦", "٥", "٤", "٣", "٢", "٠", "١","تم"]
-
+    @State private var pageNumber: String = "٣٠"
     var body: some View {
         ZStack {
-            UIforAll(skipCount: $skipCount) {
+            UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
                 VStack(spacing: 10) {
 
-                    // رقم السؤال داخل صورة
-                    HStack {
-                        ZStack {
-                            Image("PAGENUMBER")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                            Text("\(questionNumber)")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                        Spacer()
-                    }
-                    .padding(.leading, 24)
+                    
 
                     // نص السؤال فقط (بدون صورة)
                     Text(questionText)

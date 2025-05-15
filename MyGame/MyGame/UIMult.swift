@@ -5,7 +5,7 @@ struct UIMult: View {
     let answers: [String]
     let correctAnswerIndex: Int
     let questionText: String
-    let questionNumber: Int
+    let questionNumber: String
     var imageName: String? = nil
 
     @State private var selectedAnswer: Int? = nil
@@ -67,7 +67,7 @@ struct UIMult: View {
 
                     Text(questionText)
                         .font(.title)
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                         .padding(.top, 10)
 
                     VStack(spacing: 20) {
@@ -167,6 +167,6 @@ struct UIMult: View {
         answers: ["مرة كبير", "كبير", "∞", "راسي"],
         correctAnswerIndex: 2,
         questionText: "اجابة هذا السؤال كبيرة مره",
-        questionNumber: 23
+        questionNumber: "٢٣"
     )
 }

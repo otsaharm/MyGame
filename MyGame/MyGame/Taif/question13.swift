@@ -3,7 +3,7 @@ import SwiftUI
 struct question13: View {
     @State private var answerState: AnswerState? = nil
     @State private var skipCount: Int = 0
-
+    @State private var pageNumber: String = "١٣"
     enum AnswerState: Equatable {
         case correct
         case wrong(index: Int)
@@ -21,7 +21,7 @@ struct question13: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 20) {
                 Spacer()
 

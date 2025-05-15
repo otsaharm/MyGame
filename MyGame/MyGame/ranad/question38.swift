@@ -8,7 +8,7 @@ struct Question38: View {
     @State private var showBalloon: Bool = true
     @State private var showPop: Bool = false
     @State private var skipCount: Int = 0
-    
+    @State private var pageNumber: String = "١٠"
     enum PencilState {
         case unsharpened, sharpened
     }
@@ -21,7 +21,7 @@ struct Question38: View {
     let balloonSize = CGSize(width: 200, height: 300)
     
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 // Balloon
                 if showBalloon {
@@ -150,3 +150,4 @@ struct DraggableItem: View {
 #Preview {
     Question38()
 } 
+ 

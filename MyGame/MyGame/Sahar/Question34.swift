@@ -5,9 +5,9 @@ struct Level31View: View {
     @State private var skipCount = 0
     @State private var selectedCircles: Set<Int> = []
     @State private var audioPlayer: AVAudioPlayer?
-
+    @State private var pageNumber: String = "٣٤"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: -88) { // تقليل المسافة الرأسية
                 // Title
                 Text("كم فتحه بالفروه")

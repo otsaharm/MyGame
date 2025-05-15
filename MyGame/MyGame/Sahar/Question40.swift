@@ -8,9 +8,9 @@ struct Question40: View {
     @State private var selectedOrder: [Int] = []
     @State private var isCorrect = false
     @State private var audioPlayer: AVAudioPlayer?
-
+    @State private var pageNumber: String = "٤٠"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack {
                 Text("رتبهم من الأقل إلى الأعلى")
                     .font(.system(size: 24, weight: .bold))

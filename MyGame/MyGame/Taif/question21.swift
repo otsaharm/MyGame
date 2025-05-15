@@ -13,28 +13,16 @@ struct question21: View {
     @State private var dragOffset: CGSize = .zero
     @State private var isDragging = false
     @State private var camelFrames: [CGRect] = Array(repeating: .zero, count: 4)
-
+    @State private var pageNumber: String = "٢١"
     let correctIndex = 2
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
-            VStack(spacing: 32) {
-                Spacer().frame(height: 40)
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
+            VStack(spacing: 0) {
+               
 
                 // رقم السؤال في الدائرة الزرقاء
-                HStack {
-                    Image("PAGENUMBER")
-                        .resizable()
-                        .frame(width: 42, height: 42)
-                        .overlay(
-                            Text("٢١")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.white)
-                        )
-                        .padding(.leading, 32)
-                    Spacer()
-                }
-                .padding(.top, 8)
+               
 
                 // نص السؤال مع كلمة "الوضحى" في النهاية وقابلة للسحب والتحريك
                 HStack(spacing: 8) {

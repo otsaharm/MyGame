@@ -14,9 +14,9 @@ struct Question42: View {
     @State private var alertMessage: String = ""
     @State private var isInteractionEnabled: Bool = true
     @State private var imageName: String = "red" // ← صورة البداية
-
+    @State private var pageNumber: String = "٤٢"
     var body: some View {
-        return UIforAll(skipCount: $skipCount) {
+        return UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 Image(imageName)
                     .resizable()

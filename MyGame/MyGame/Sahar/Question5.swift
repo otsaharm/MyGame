@@ -7,7 +7,7 @@ struct Question5: View {
     var body: some View {
         let answers = ["خارج الخدمة", "خارج الخدمة", "خارج الخدمة", "خارج الخدمة"]
         let questionText = "اضغط على "
-        let questionNumber = 5
+        let questionNumber = "٥"
         let correctAnswerIndex = 7
 
         VStack(spacing: 16) {

@@ -16,9 +16,10 @@ struct Question49: View {
     @State private var cycles: Int = 0
     @State private var timer: Timer? = nil
     @State private var skipCount: Int = 0
+    @State private var pageNumber: String = "٤٩"
     
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 // Question text
                 Text("اويلاو وين الكليجه اللي نبيها")

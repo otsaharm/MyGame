@@ -6,7 +6,7 @@ struct Question46: View {
     var body: some View {
         let answers = ["مافي تواصل", "يزعل الرواتر", "العالم ينهار", "تنام بدري"]
         let questionText = "وش يصير إذا انقطع النت"
-        let questionNumber = 46
+        let questionNumber = "٤٦"
         let correctAnswerIndex = 3 // ✅ الاسم الصحيح
         UIMult(
             skipCont: $skipCount,

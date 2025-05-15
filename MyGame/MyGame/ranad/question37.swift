@@ -5,6 +5,7 @@ struct Question37: View {
     @State private var draggedKeyIndex: Int? = nil
     @State private var keyOffsets: [CGSize] = Array(repeating: .zero, count: 4)
     @State private var showSuccess: Bool = false
+    @State private var pageNumber: String = "٣٧"
     @State private var skipCount: Int = 0
     
     let keys = ["KEY.WRONG.1", "KEY.WRONG.2", "KEY.WRONG.3", "KEY.RIGHT"]
@@ -22,23 +23,11 @@ struct Question37: View {
     let lockY: CGFloat = 328 + 228.24/2
     
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
-                VStack(spacing: 32) {
+                VStack {
                     // Question number and text
-                    HStack {
-                        Image("PAGENUMBER")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .overlay(
-                                Text("٣٧")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(.white)
-                            )
-                            .padding(.leading, 32)
-                        Spacer()
-                    }
-                    .padding(.top, 24)
+                   
                     Text("وش المفتاح الصح")
                         .font(.system(size: 24, weight: .bold))
                         .multilineTextAlignment(.center)
@@ -98,6 +87,7 @@ struct Question37: View {
                 }
             }
         }
+        .ignoresSafeArea()
     }
 }
 

@@ -9,8 +9,7 @@ struct question3: View {
             answers: ["هـ", "كان هذا السؤال مر علي 🤔", "ل", "ذ"],
             correctAnswerIndex: 3, // "ذ" هو الصحيح (الزر الرابع)
             questionText: "وش تاسع حرف من الحروف الهجائية",
-            questionNumber: 3
-        )
+            questionNumber: "٣"        )
     }
 }
 

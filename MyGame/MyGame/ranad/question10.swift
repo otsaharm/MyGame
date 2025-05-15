@@ -9,6 +9,7 @@ struct Question10: View {
     let colorReveals: [[Int]]
     @State private var pressingColor: Int? = nil
     @State private var skipCount: Int = 0
+    @State private var pageNumber: String = "١٠"
 
     init() {
         // User's custom mapping (including spaces)
@@ -31,7 +32,7 @@ struct Question10: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geometry in
                 VStack {
                     Spacer(minLength: geometry.size.height * 0.10)
@@ -93,3 +94,4 @@ struct Question10: View {
 #Preview {
     Question10()
 } 
+ 

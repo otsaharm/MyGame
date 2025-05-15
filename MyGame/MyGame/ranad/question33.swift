@@ -10,7 +10,7 @@ struct Question33: View {
     ]
     let correctIndex = 1
     let questionText = "وش تاسع حرف من الحروف الابجدية؟"
-    let questionNumber = 33
+    let questionNumber = "٣٣"
     
     var body: some View {
         UIMult(

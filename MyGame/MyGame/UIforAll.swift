@@ -2,11 +2,13 @@ import SwiftUI
 
 struct UIforAll<Content: View>: View {
     @Binding var skipCount: Int
+    @Binding var pageNumber: String
     let maxSkips = 4
     let content: Content
 
-    init(skipCount: Binding<Int>, @ViewBuilder content: () -> Content) {
+    init(skipCount: Binding<Int>, pageNumber: Binding<String>, @ViewBuilder content: () -> Content) {
         self._skipCount = skipCount
+        self._pageNumber = pageNumber
         self.content = content()
     }
 
@@ -22,7 +24,7 @@ struct UIforAll<Content: View>: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) { // إزالة الأقواس الخارجية لـ VStack
+            VStack(spacing: 0) {
                 HStack {
                     Image("BUTTON.HOME")
                         .resizable()
@@ -39,6 +41,21 @@ struct UIforAll<Content: View>: View {
                     .padding(.trailing, 24)
                 }
                 .padding(.top, 55)
+
+                // Page Number Display
+                HStack {
+                    Image("PAGENUMBER")
+                        .resizable()
+                        .frame(width: 42, height: 42)
+                        .overlay(
+                            Text(pageNumber)
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+                        )
+                        .padding(.leading, 32)
+                    Spacer()
+                }
+                .padding(.top, 10)
 
                 Spacer(minLength: 0)
 
@@ -72,9 +89,9 @@ struct UIforAll<Content: View>: View {
                 }
                 .padding(.bottom, 32)
                 .padding(.trailing, -100)
-            } // نهاية VStack
+            }
             .frame(width: geometry.size.width, height: geometry.size.height)
-        } // نهاية GeometryReader
+        }
         .ignoresSafeArea()
     }
 }
@@ -82,7 +99,8 @@ struct UIforAll<Content: View>: View {
 // Preview
 #Preview {
     @State var previewSkip = 0
-    return UIforAll(skipCount: $previewSkip) {
+    @State var previewPage = "٢٣"
+    return UIforAll(skipCount: $previewSkip, pageNumber: $previewPage) {
         VStack {
             Text("مثال على المحتوى").font(.title)
         }

@@ -16,6 +16,7 @@ struct Question25: View {
     @State private var rockGone = false
     @State private var paperGone = false
     @State private var showCheck = false
+    @State private var pageNumber: String = "٢٥"
 
     let imageSize: CGFloat = 130
 
@@ -33,7 +34,7 @@ struct Question25: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geo in
                 VStack(spacing: 24) {
                     Text("فوّز المقص")

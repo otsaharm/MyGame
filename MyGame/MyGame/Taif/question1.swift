@@ -19,7 +19,7 @@ struct question1: View {
             answers: answers,
             correctAnswerIndex: correctAnswerIndex,
             questionText: questionText,
-            questionNumber: 1
+            questionNumber: "١"
         )
     }
 }

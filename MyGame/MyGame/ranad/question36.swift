@@ -21,9 +21,9 @@ struct Question36: View {
         HiddenNumber(value: 9, asset: "٩", position: CGPoint(x: 380, y: 550), size: CGSize(width: 25, height: 30))
     ]
     let tapRadius: CGFloat = 40
-    
+    @State private var pageNumber: String = "٣٦"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 // Hidden numbers (only show if revealed)
                 ForEach(0..<4) { i in

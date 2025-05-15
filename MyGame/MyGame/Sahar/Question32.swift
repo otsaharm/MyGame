@@ -7,7 +7,7 @@ struct Question32: View {
     var body: some View {
         let answers = ["امك", "المعلم", "الصافرة", "الحكم"]
         let questionText = "هيبه وتأمر على عشرين رجال وحرمه؟"
-        let questionNumber = 46
+        let questionNumber = "٣٢"
         let correctAnswerIndex = 2 // ✅ الاسم الصحيح
         UIMult(
             skipCont: $skipCount,

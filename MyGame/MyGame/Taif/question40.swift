@@ -2,23 +2,12 @@ import SwiftUI
 
 struct question40: View {
     @State private var skipCount = 0
-
+    @State private var pageNumber: String = "٤٠"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 32) {
-                // رقم الصفحة (الدائرة الزرقاء)
-                HStack {
-                    Image("PAGENUMBER")
-                        .resizable()
-                        .frame(width: 42, height: 42)
-                        .overlay(
-                            Text("٤٠")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.white)
-                        )
-                        .padding(.leading, 32)
-                    Spacer()
-                }
+                
+                
                 // ↓↓↓ أضف هذا السطر ↓↓↓
                 Spacer(minLength: 60)
                 // العنوان

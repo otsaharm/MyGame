@@ -6,7 +6,7 @@ struct Question39: View {
     var body: some View {
         let answers = ["اذا اشتاق", "اذا شافك", "اذا انصهر", "اذا خاف"]
         let questionText = "متى يذوب الحديد"
-        let questionNumber = 39
+        let questionNumber = "٣٩"
         let correctAnswerIndex = 0// مؤشر الإجابة الصحيحة ("اذا انصهر")
 
         UIMult(

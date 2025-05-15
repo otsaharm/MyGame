@@ -9,7 +9,7 @@ struct Question19: View {
     @State private var questionNumberPosition: CGPoint = CGPoint(x: 40, y: 60)
     @State private var isDraggingQuestion = false
     @State private var audioPlayer: AVAudioPlayer? // لتخزين اللاعب الصوتي
-
+    @State private var pageNumber: String = "٢٢"
     let grid = [
         ["O", "O", "X"],
         ["", "O", ""],
@@ -22,7 +22,7 @@ struct Question19: View {
 
     var body: some View {
         ZStack {
-            UIforAll(skipCount: $skipCount) {
+            UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
                 Text("فوز!")
                     .font(.system(size: 26, weight: .bold))
                     .foregroundColor(.black)

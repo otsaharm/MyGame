@@ -10,7 +10,7 @@ struct Question44: View {
     ]
     let correctIndex = 2
     let questionText = "وشو من الاختيارات موجود تحت العين؟"
-    let questionNumber = 44
+    let questionNumber = "٤٤"
     
     var body: some View {
         UIMult(
@@ -21,4 +21,7 @@ struct Question44: View {
             questionNumber: questionNumber
         )
     }
+}
+#Preview {
+    Question44()
 }

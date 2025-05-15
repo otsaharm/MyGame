@@ -6,7 +6,7 @@ struct Question23: View {
     var body: some View {
         let answers = ["مرة كبير", "كبير", "∞", "راسي"]
         let questionText = "اجابة هذا السؤال كبيرة مره"
-        let questionNumber = 23
+        let questionNumber = "٢٣"
         let correctAnswerIndex = 3 // "∞"
 
         return UIMult(
