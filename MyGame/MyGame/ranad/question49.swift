@@ -5,7 +5,7 @@ struct Question49: View {
     let radius: CGFloat = 110
     let klegaSize: CGFloat = 80
     let handSize: CGFloat = 75
-    let centerY: CGFloat = 380
+    let centerY: CGFloat = 300
     let centerX: CGFloat = 200
     
     @State private var handIndex: Int = 0
@@ -25,7 +25,7 @@ struct Question49: View {
                 Text("اويلاو وين الكليجه اللي نبيها")
                     .font(.system(size: 30, weight: .bold))
                     .foregroundColor(.black)
-                    .position(x: centerX , y: 120)
+                    .position(x: centerX , y: 50)
                 // Klega circle
                 ForEach(0..<klegaCount, id: \.self) { i in
                     let angle = Double(i) / Double(klegaCount) * 2 * Double.pi - Double.pi/2

@@ -36,11 +36,11 @@ struct Question25: View {
     var body: some View {
         UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geo in
-                VStack(spacing: 24) {
+                VStack(spacing: 50) {
                     Text("فوّز المقص")
                         .font(.system(size: 36, weight: .semibold))
                         .foregroundColor(.black)
-                        .padding(.top, 140)
+                        .padding(.top, 50)
                     Spacer(minLength:0)
                     ZStack {
                         // ROCK

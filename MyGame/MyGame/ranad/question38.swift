@@ -14,10 +14,10 @@ struct Question38: View {
     }
     
     // Manual positions for items (tune as needed for your layout)
-    let sharpenerPos = CGPoint(x: 90, y: 600)
-    let pencilPos = CGPoint(x: 200, y: 700)
-    let pinPos = CGPoint(x: 320, y: 600)
-    let balloonPos = CGPoint(x: 200, y: 300)
+    let sharpenerPos = CGPoint(x: 90, y: 300)
+    let pencilPos = CGPoint(x: 200, y: 350)
+    let pinPos = CGPoint(x: 320, y: 300)
+    let balloonPos = CGPoint(x: 200, y: 150)
     let balloonSize = CGSize(width: 200, height: 300)
     
     var body: some View {

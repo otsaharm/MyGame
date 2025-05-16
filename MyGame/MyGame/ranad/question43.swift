@@ -14,8 +14,8 @@ struct Question43: View {
     var body: some View {
         UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
-                VStack(spacing: 0) {
-                    Spacer().frame(height: 120) // Space from top
+                VStack {
+                     // Space from top
                     // Question
                     Text("فكر بسرعه !!!")
                         .font(.system(size: 32, weight: .bold))

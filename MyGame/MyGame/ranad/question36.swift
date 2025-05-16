@@ -35,7 +35,7 @@ struct Question36: View {
                             .transition(.scale)
                     }
                 }
-                VStack(spacing: -20) {
+                VStack(spacing: -40) {
                     HStack(spacing: 0) {
                         Text("الصندوق")
                             .font(.system(size: 28, weight: .regular))
