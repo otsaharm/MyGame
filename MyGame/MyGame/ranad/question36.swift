@@ -21,9 +21,10 @@ struct Question36: View {
         HiddenNumber(value: 9, asset: "٩", position: CGPoint(x: 380, y: 550), size: CGSize(width: 25, height: 30))
     ]
     let tapRadius: CGFloat = 40
-    
+    @State private var pageNumber: String = "٣٦"
+    var onNext: () -> Void = {}
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
                 // Hidden numbers (only show if revealed)
                 ForEach(0..<4) { i in
@@ -35,7 +36,7 @@ struct Question36: View {
                             .transition(.scale)
                     }
                 }
-                VStack(spacing: -20) {
+                VStack(spacing: -40) {
                     HStack(spacing: 0) {
                         Text("الصندوق")
                             .font(.system(size: 28, weight: .regular))
@@ -126,6 +127,10 @@ struct Question36: View {
     func checkWin() {
         if code == correctCode {
             showSuccess = true
+            // الانتقال التلقائي بعد نصف ثانية
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                onNext()
+            }
         } else {
             showSuccess = false
         }

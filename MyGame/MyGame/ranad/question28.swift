@@ -7,27 +7,13 @@ struct Question28: View {
     @State private var showArrow: Bool = true
     @State private var showQuestionText: Bool = true
     @State private var skipCount: Int = 0
-    
+    @State private var pageNumber: String = "٢٨"
+    var onNext: () -> Void = {} // أضف هذا المتغير
+
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geometry in
                 VStack {
-                    // Page number
-                    HStack {
-                        Image("PAGENUMBER")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .overlay(
-                                Text("٢٨")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(.white)
-                            )
-                            .padding(.leading, 32)
-                        Spacer()
-                    }
-                    .padding(.top, 60)
-                    .padding(.bottom, 20)
-                    // Main content centered in remaining space
                     VStack {
                         HStack(spacing: 16) {
                             ZStack {
@@ -55,8 +41,9 @@ struct Question28: View {
                                                                 isCorrect = true
                                                                 showResult = true
                                                             }
+                                                            // الانتقال التلقائي بعد ثانية
                                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                reset()
+                                                                onNext()
                                                             }
                                                         }
                                                     } else if value.translation.width > 60 {
@@ -105,7 +92,7 @@ struct Question28: View {
             }
         }
     }
-    
+
     private func reset() {
         withAnimation {
             arrowOffset = 0
@@ -119,4 +106,4 @@ struct Question28: View {
 
 #Preview {
     Question28()
-} 
+}

@@ -4,11 +4,11 @@ struct question4: View {
     @State private var skipCount = 0
     @State private var showColors = true // ظهور الألوان في البداية
     @State private var selectedAnswer: Int? = nil
+    var onNext: () -> Void   // أضف هذا المتغير
 
     let correctIndex = 3
     let questionText = "ناظر زين!!"
     let questionNumber = 4
-
     let answers = ["", "", "", ""]
 
     var body: some View {
@@ -112,12 +112,17 @@ struct question4: View {
         .ignoresSafeArea()
     }
 
-    // دالة إنشاء الأزرار
+    // دالة إنشاء الأزرار مع منطق الانتقال التلقائي
     func makeButton(index: Int) -> some View {
         Button(action: {
             guard !showColors else { return }
             if selectedAnswer == nil {
                 selectedAnswer = index
+                if index == correctIndex {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        onNext()
+                    }
+                }
             }
         }) {
             ZStack {
@@ -156,7 +161,5 @@ struct question4: View {
 }
 
 #Preview {
-    question4()
+    question4(onNext: {})
 }
-
-

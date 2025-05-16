@@ -1,24 +1,28 @@
 import SwiftUI
+
 struct Question20: View {
     @State private var skipCount = 0
+    var onNext: () -> Void   // أضف هذا المتغير
 
     var body: some View {
-        let answers = ["تفاحة", "برتقال", "موز", "عنب"]
-        let correctAnswerIndex = 2
-        let questionText = "ما هي الفاكهة؟"
-        let questionNumber: Int // ← تضيف هذا
+        let answers = ["١+ تخطي", "تجاهل", "-١ حياة", "١+ حياة"]
+        let questionText = "الخيار لك فلها 😉"
+        let questionNumber = "٢٠"
+        let correctAnswerIndex = 3 // مؤشر الإجابة الصحيحة ("١+ حياة")
 
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex,
             questionText: questionText,
-            questionNumber: 20
+            questionNumber: questionNumber,
+            onCorrect: onNext // عند الإجابة الصحيحة انتقل للسؤال 21
         )
     }
 }
+
 struct Question20_Previews: PreviewProvider {
     static var previews: some View {
-        Question20()
+        Question20(onNext: {})
     }
 }

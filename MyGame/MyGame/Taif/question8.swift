@@ -5,6 +5,8 @@ struct question8: View {
     @State private var answerStep = 0
     @State private var showCorrect = false
     @State private var showWrong = false
+    @State private var pageNumber: String = "٨"
+    var onNext: () -> Void   // أضف هذا المتغير
 
     // الحروف المطلوبة بالترتيب
     let letters = ["م", "و", "ز"]
@@ -24,7 +26,7 @@ struct question8: View {
     ]
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
                 Spacer()
                 Text("ايش هذا ؟")
@@ -116,6 +118,10 @@ struct question8: View {
             if answerStep == 2 {
                 showCorrect = true
                 answerStep += 1
+                // الانتقال للسؤال التاسع بعد نصف ثانية
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    onNext()
+                }
             } else {
                 answerStep += 1
             }
@@ -135,6 +141,5 @@ struct question8: View {
 }
 
 #Preview {
-    question8()
+    question8(onNext: {})
 }
-

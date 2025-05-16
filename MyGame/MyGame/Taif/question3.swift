@@ -1,21 +1,21 @@
-
-
 import SwiftUI
 
 struct question3: View {
     @State private var skipCount = 0
+    var onNext: () -> Void   // أضف هذا المتغير
 
     var body: some View {
         UIMult(
             skipCont: $skipCount,
             answers: ["هـ", "كان هذا السؤال مر علي 🤔", "ل", "ذ"],
-            correctIndex: 3, // "ذ" هو الصحيح (الزر الرابع)
+            correctAnswerIndex: 0, // "هـ" هو الصحيح (الزر الأول)
             questionText: "وش تاسع حرف من الحروف الهجائية",
-            questionNumber: 3
+            questionNumber: "٣",
+            onCorrect: onNext // مرر الدالة هنا
         )
     }
 }
 
 #Preview {
-    question3()
+    question3(onNext: {})
 }

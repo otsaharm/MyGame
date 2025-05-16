@@ -9,6 +9,8 @@ struct question15: View {
     @State private var phase: Int = 0 // 0: أزرق، 1: أحمر
     @State private var showCorrect = false
     @State private var timer: Timer?
+    @State private var pageNumber: String = "١٥"
+    var onNext: () -> Void   // أضف هذا المتغير
 
     // ترتيب الدوائر: أخضر - أحمر - أزرق - أصفر
     let colorImages = ["greencircle", "redcircle", "bluecircle", "yellowcircle"]
@@ -19,17 +21,16 @@ struct question15: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
-                Spacer().frame(height: 100) // زِد القيمة هنا لإنزال كل شيء أكثر
+                Spacer().frame(height: 100)
 
-                // نص السؤال
                 Text("اهزم التمساح")
                     .font(.custom("BalooBhaijaan2-Medium", size: 26))
                     .foregroundColor(.black)
                     .padding(.bottom, 12)
 
-                Spacer(minLength: 50) // زِد هذه القيمة إذا أردت نزول التمساح والنص أكثر
+                Spacer(minLength: 50)
 
                 HStack(alignment: .center, spacing: 24) {
                     if phase == 0 {
@@ -48,14 +49,19 @@ struct question15: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
 
-                Spacer(minLength: 30) // زِد هذه القيمة إذا أردت نزول الدوائر أكثر
+                Spacer(minLength: 30)
 
-                // الدوائر الملونة
                 HStack(spacing: 18) {
                     ForEach(0..<4) { i in
                         Button(action: {
                             if i == correctIndex {
                                 showCorrect = true
+                                // إذا كان في المرحلة الثانية (phase == 1) والإجابة صح، انتقل للسؤال 16
+                                if phase == 1 {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                                        onNext()
+                                    }
+                                }
                             } else {
                                 showCorrect = false
                             }
@@ -69,7 +75,6 @@ struct question15: View {
                 }
                 .padding(.top, 8)
 
-                // رسالة الإجابة الصحيحة
                 if showCorrect {
                     Text("إجابة صحيحة! 🎉")
                         .foregroundColor(.green)
@@ -88,7 +93,6 @@ struct question15: View {
         }
     }
 
-    // دالة المؤقت لتغيير اللون بعد 5 ثواني
     func startTimer() {
         timer?.invalidate()
         showCorrect = false
@@ -103,5 +107,5 @@ struct question15: View {
 }
 
 #Preview {
-    question15()
+    question15(onNext: {})
 }

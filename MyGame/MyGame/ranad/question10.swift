@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct Question10: View {
-    // Split the message into three rows
+    // تقسيم الرسالة إلى ثلاثة صفوف
     let row1: [Character] = Array("اضغط زر") // indices 0-6
     let row2: [Character] = Array("البيت")   // indices 7-11
     let row3: [Character] = Array("للفوز")   // indices 12-16
@@ -9,29 +9,38 @@ struct Question10: View {
     let colorReveals: [[Int]]
     @State private var pressingColor: Int? = nil
     @State private var skipCount: Int = 0
+    @State private var pageNumber: String = "١٠"
+    var onNext: () -> Void
 
-    init() {
-        // User's custom mapping (including spaces)
+    init(onNext: @escaping () -> Void = {}) {
+        // توزيع الحروف على الألوان
         self.colorReveals = [
-            [0, 11, 5],                // Orange
-            [1, 7, 15, 4],             // Yellow
-            [3, 16, 8, 18],            // Purple
-            [9, 2, 11],                // Blue
-            [12, 6, 8],                // Green
-            [10, 13, 14, 17]           // Red
+            [0, 11, 5],                // برتقالي
+            [1, 7, 15, 4],             // أصفر
+            [3, 16, 8, 18],            // بنفسجي
+            [9, 2, 11],                // أزرق
+            [12, 6, 8],                // أخضر
+            [10, 13, 14, 17]           // أحمر
         ]
         self.colors = [
-            Color(red: 0.98, green: 0.68, blue: 0.33), // Orange
-            Color(red: 0.99, green: 0.89, blue: 0.38), // Yellow
-            Color(red: 0.38, green: 0.29, blue: 0.87), // Purple
-            Color(red: 0.47, green: 0.69, blue: 1.00), // Blue
-            Color(red: 0.44, green: 0.82, blue: 0.51), // Green
-            Color(red: 0.98, green: 0.47, blue: 0.44)  // Red
+            Color(red: 0.98, green: 0.68, blue: 0.33), // برتقالي
+            Color(red: 0.99, green: 0.89, blue: 0.38), // أصفر
+            Color(red: 0.38, green: 0.29, blue: 0.87), // بنفسجي
+            Color(red: 0.47, green: 0.69, blue: 1.00), // أزرق
+            Color(red: 0.44, green: 0.82, blue: 0.51), // أخضر
+            Color(red: 0.98, green: 0.47, blue: 0.44)  // أحمر
         ]
+        self.onNext = onNext
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(
+            skipCount: $skipCount,
+            pageNumber: $pageNumber,
+            onHomeOverride: {
+                onNext() // فقط في السؤال العاشر: عند الضغط على زر الهوم ينتقل للسؤال 11
+            }
+        ) {
             GeometryReader { geometry in
                 VStack {
                     Spacer(minLength: geometry.size.height * 0.10)
@@ -70,7 +79,7 @@ struct Question10: View {
         }
     }
 
-    // Helper to show a row of letters, offset is the starting index in the full message
+    // عرض صف من الحروف
     func rowView(row: [Character], offset: Int) -> some View {
         HStack(spacing: 4) {
             ForEach(0..<row.count, id: \.self) { i in
@@ -91,5 +100,5 @@ struct Question10: View {
 }
 
 #Preview {
-    Question10()
-} 
+    Question10(onNext: {})
+}

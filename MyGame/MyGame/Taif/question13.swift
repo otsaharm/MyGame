@@ -1,8 +1,9 @@
-
 import SwiftUI
 struct question13: View {
     @State private var answerState: AnswerState? = nil
     @State private var skipCount: Int = 0
+    @State private var pageNumber: String = "١٣"
+    var onNext: () -> Void   // أضف هذا المتغير
 
     enum AnswerState: Equatable {
         case correct
@@ -21,7 +22,7 @@ struct question13: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 20) {
                 Spacer()
 
@@ -33,6 +34,10 @@ struct question13: View {
 
                     Button(action: {
                         answerState = .correct
+                        // الانتقال للسؤال 14 بعد نصف ثانية
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                            onNext()
+                        }
                     }) {
                         Circle()
                             .fill(answerState == .correct ? Color.green : Color.black)
@@ -93,5 +98,5 @@ struct question13: View {
 }
 
 #Preview {
-    question13()
+    question13(onNext: {})
 }

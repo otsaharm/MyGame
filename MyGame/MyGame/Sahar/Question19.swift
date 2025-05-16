@@ -1,74 +1,142 @@
 import SwiftUI
+import AVFoundation
 
-struct SimpleXOGameView: View {
+struct Question19: View {
+    @State private var skipCount = 0
     @State private var circlePosition: CGPoint = .zero
     @State private var feedbackIcon: String? = nil
     @State private var feedbackColor: Color = .green
-
+    @State private var questionNumberPosition: CGPoint = CGPoint(x: 40, y: 60)
+    @State private var isDraggingQuestion = false
+    @State private var audioPlayer: AVAudioPlayer?
+    @State private var pageNumber: String = "٢٢"
     let grid = [
-        ["X", "O", "X"],
-        ["X", "X", ""],
-        ["O", "", "O"]
+        ["O", "O", "X"],
+        ["", "O", ""],
+        ["X", "", "X"]
     ]
-
-    let cellSize: CGFloat = 80
-    let spacing: CGFloat = 15
-
-    // الموقع الصحيح (الصف 3، عمود 2)
+    let cellSize: CGFloat = 70
+    let spacing: CGFloat = 20
     let correctCell = (row: 2, col: 1)
+    var onNext: () -> Void   // متغير الانتقال
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                // الشبكة
-                VStack(spacing: spacing) {
-                    ForEach(0..<3) { row in
-                        HStack(spacing: spacing) {
-                            ForEach(0..<3) { col in
-                                Text(grid[row][col])
-                                    .font(.system(size: 40))
-                                    .frame(width: cellSize, height: cellSize)
-                                    .background(Color.white)
-                                    .border(Color.black, width: 1)
+        ZStack {
+            UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
+                Text("فوز!")
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 20)
+
+                GeometryReader { geo in
+                    let gridOriginX = (geo.size.width - gridWidth()) / 2
+                    let gridOriginY = (geo.size.height - gridHeight()) / 2
+
+                    ZStack {
+                        // خطوط الشبكة الرمادية
+                        ForEach(1..<3) { i in
+                            // أفقي
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.6))
+                                .frame(width: gridWidth(), height: 3)
+                                .position(
+                                    x: gridOriginX + gridWidth() / 2,
+                                    y: gridOriginY + CGFloat(i) * (cellSize + spacing) - spacing / 2
+                                )
+                            // رأسي
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.6))
+                                .frame(width: 3, height: gridHeight())
+                                .position(
+                                    x: gridOriginX + CGFloat(i) * (cellSize + spacing) - spacing / 2,
+                                    y: gridOriginY + gridHeight() / 2
+                                )
+                        }
+
+                        // الشبكة والرموز
+                        VStack(spacing: spacing) {
+                            ForEach(0..<3) { row in
+                                HStack(spacing: spacing) {
+                                    ForEach(0..<3) { col in
+                                        ZStack {
+                                            Rectangle()
+                                                .fill(Color.clear)
+                                                .frame(width: cellSize, height: cellSize)
+
+                                            if grid[row][col] == "O" {
+                                                Circle()
+                                                    .stroke(Color.cyan, lineWidth: 3)
+                                                    .frame(width: 50, height: 50)
+                                            } else if grid[row][col] == "X" {
+                                                XShape()
+                                                    .stroke(Color.blue, lineWidth: 4)
+                                                    .frame(width: 50, height: 50)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                        .position(x: geo.size.width / 2, y: geo.size.height / 2)
 
-                // الدائرة السوداء المتحركة
-                Circle()
-                    .stroke(Color.black, lineWidth: 3)
-                    .frame(width: 30, height: 30)
-                    .position(circlePosition == .zero ? CGPoint(x: 40, y: 60) : circlePosition)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                circlePosition = value.location
+                        // صورة رقم السؤال
+                        Image("PAGENUMBER")
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.top, -60)
+                            .frame(width: 42, height: 42)
+                            .position(circlePosition == .zero ? questionNumberPosition : circlePosition)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { value in
+                                        circlePosition = value.location
+                                        questionNumberPosition = value.location
+                                        isDraggingQuestion = true
+                                    }
+                                    .onEnded { _ in
+                                        let gridOrigin = CGPoint(
+                                            x: gridOriginX,
+                                            y: gridOriginY
+                                        )
+                                        checkDropPosition(origin: gridOrigin)
+                                        isDraggingQuestion = false
+                                    }
+                            )
+
+                        // رقم السؤال (متحرك)
+                        Text("٢٢")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(width: 42, height: 42)
+                            .padding(.top, -60)
+                            .position(questionNumberPosition)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { value in
+                                        questionNumberPosition = value.location
+                                        circlePosition = value.location
+                                        isDraggingQuestion = true
+                                    }
+                                    .onEnded { _ in
+                                        let gridOrigin = CGPoint(
+                                            x: gridOriginX,
+                                            y: gridOriginY
+                                        )
+                                        checkDropPosition(origin: gridOrigin)
+                                        isDraggingQuestion = false
+                                    }
+                            )
+
+                        // علامة صح أو خطأ
+                        if let icon = feedbackIcon {
+                            ZStack {
+                                Color.black.opacity(0.3).ignoresSafeArea()
+                                Image(systemName: icon)
+                                    .font(.system(size: 200))
+                                    .foregroundColor(feedbackColor)
                             }
-                            .onEnded { _ in
-                                let gridOrigin = CGPoint(
-                                    x: (geo.size.width - gridWidth()) / 2,
-                                    y: (geo.size.height - gridHeight()) / 2
-                                )
-                                checkDropPosition(origin: gridOrigin)
-                            }
-                    )
-
-                // الرقم الثابت ٢٢
-                Text("٢٢")
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .position(x: 40, y: 60)
-
-                // علامة الصح أو الخطأ
-                if let icon = feedbackIcon {
-                    ZStack {
-                        Color.black.opacity(0.3)
-                            .ignoresSafeArea()
-                        Image(systemName: icon)
-                            .font(.system(size: 200))
-                            .foregroundColor(feedbackColor)
+                        }
                     }
                 }
             }
@@ -83,43 +151,71 @@ struct SimpleXOGameView: View {
         (cellSize * 3) + (spacing * 2)
     }
 
-    func cellCenter(row: Int, col: Int, origin: CGPoint) -> CGPoint {
-        let x = origin.x + CGFloat(col) * (cellSize + spacing) + cellSize / 2
-        let y = origin.y + CGFloat(row) * (cellSize + spacing) + cellSize / 2
-        return CGPoint(x: x, y: y)
+    func cellFrame(row: Int, col: Int, origin: CGPoint) -> CGRect {
+        let x = origin.x + CGFloat(col) * (cellSize + spacing)
+        let y = origin.y + CGFloat(row) * (cellSize + spacing)
+        return CGRect(x: x, y: y, width: cellSize, height: cellSize)
     }
 
+    // دالة للتحقق من موقع سحب الدائرة
     func checkDropPosition(origin: CGPoint) {
-        let range: CGFloat = cellSize / 2
-
         for row in 0..<3 {
             for col in 0..<3 {
-                let center = cellCenter(row: row, col: col, origin: origin)
-                if abs(circlePosition.x - center.x) < range &&
-                    abs(circlePosition.y - center.y) < range {
-
+                let frame = cellFrame(row: row, col: col, origin: origin)
+                if frame.contains(circlePosition) {
+                    // حساب مكان السؤال بناءً على محاذاة X و O
+                    let newX = frame.origin.x + (frame.size.width - 42) / 2
+                    let newY = frame.origin.y + (frame.size.height - 42) / 2
+                    circlePosition = CGPoint(x: newX, y: newY)
                     if row == correctCell.row && col == correctCell.col {
                         feedbackIcon = "checkmark.circle.fill"
                         feedbackColor = .green
+                        playSound(isCorrect: true)
+                        // الانتقال للسؤال 20 بعد ثانية ونصف
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            feedbackIcon = nil
+                            onNext()
+                        }
                     } else {
                         feedbackIcon = "xmark.circle.fill"
                         feedbackColor = .red
+                        playSound(isCorrect: false)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            feedbackIcon = nil
+                        }
                     }
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        feedbackIcon = nil
-                    }
-
                     return
                 }
             }
         }
-
-        // إذا ما نزلها على خلية واضحة، ما يطلع شيء
         feedbackIcon = nil
+    }
+
+    // دالة لتشغيل الصوت
+    func playSound(isCorrect: Bool) {
+        let soundName = isCorrect ? "success" : "failure"
+        if let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.play()
+            } catch {
+                print("Error playing sound: \(error)")
+            }
+        }
+    }
+}
+
+struct XShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.move(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        return path
     }
 }
 
 #Preview {
-    SimpleXOGameView()
+    Question19(onNext: {})
 }

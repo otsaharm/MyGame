@@ -10,6 +10,7 @@ struct Question22: View {
         "نمنة فخمة" // correct
     ]
     let correctIndex = 3
+    var onNext: () -> Void = {}
     
     var body: some View {
         GeometryReader { geometry in
@@ -82,6 +83,12 @@ struct Question22: View {
     func answerButton(index: Int) -> some View {
         Button(action: {
             selectedAnswer = index
+            if index == correctIndex {
+                // الانتقال للسؤال 23 بعد نصف ثانية
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    onNext()
+                }
+            }
         }) {
             ZStack {
                 if selectedAnswer == index && index == correctIndex {
@@ -104,5 +111,6 @@ struct Question22: View {
 }
 
 #Preview {
-    Question22()
+    Question22(onNext: {})
 } 
+ 

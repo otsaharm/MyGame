@@ -1,14 +1,14 @@
-
-
 import SwiftUI
 
 struct question26: View {
     @State private var isDropped = false
     @State private var skipCount = 0
     @State private var offset = CGSize.zero
+    @State private var pageNumber: String = "٢٦"
+    var onNext: () -> Void = {}
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 32) {
                 Spacer().frame(height: 40)
 
@@ -34,6 +34,10 @@ struct question26: View {
                                         if value.location.y > 180 && value.location.y < 320 &&
                                             value.location.x > 120 && value.location.x < 260 {
                                             isDropped = true
+                                            // الانتقال التلقائي بعد نصف ثانية
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                onNext()
+                                            }
                                         } else {
                                             offset = .zero
                                         }
@@ -77,6 +81,5 @@ struct question26: View {
 }
 
 #Preview {
-    question26()
+    question26(onNext: {})
 }
-

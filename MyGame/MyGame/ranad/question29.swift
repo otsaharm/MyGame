@@ -10,19 +10,21 @@ struct Question29: View {
     ]
     let correctIndex = 0
     let questionText = "لو عندك دلو فيه فتحة من تحت، وش تسوي عشان ماينكب المويه"
-    let questionNumber = 29
-    
+    let questionNumber = "٢٩"
+    var onNext: () -> Void = {} // أضف هذا المتغير
+
     var body: some View {
         UIMult(
             skipCont: $skipCont,
             answers: answers,
-            correctIndex: correctIndex,
+            correctAnswerIndex: correctIndex,
             questionText: questionText,
-            questionNumber: questionNumber
+            questionNumber: questionNumber,
+            onCorrect: onNext // عند الإجابة الصحيحة انتقل للسؤال 30
         )
     }
 }
 
 #Preview {
     Question29()
-} 
+}

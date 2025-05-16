@@ -1,26 +1,37 @@
-
-
 import SwiftUI
 
 struct question41: View {
     @State private var skipCount = 0
 
-    // غير هذه القيم لتغيير مكان السيارة
-    @State private var carPosition = CGPoint(x: -10, y: -200) // مثال: أعلى يمين المتاهة تقريباً
-
-    // غير هذه القيم لتغيير مكان الصبيان (نقطة البداية)
-    @State private var playerOffset = CGPoint(x: 0, y: 180) // مثال: أسفل المتاهة تقريباً
-
+    // مكان السيارة
+    @State private var carPosition = CGPoint(x: -10, y: -200)
+    // مكان الصبيان (نقطة البداية)
+    @State private var playerOffset = CGPoint(x: 0, y: 180)
     @State private var hasWon = false
 
-    // حدود الحركة (حسب شبكة المتاهة الأصلية)
-    let minX: CGFloat = -180
-    let maxX: CGFloat = 180
-    let minY: CGFloat = -400
-    let maxY: CGFloat = 120
+    @State private var pageNumber: String = "٤١"
+    var onNext: () -> Void = {}
+
+    // مسار المستخدم الحالي: "none", "red", "green"
+    @State private var currentPath: String = "none"
+
+    // عدادات المسار الأحمر (الأول)
+    @State private var upRed = 0
+    @State private var leftRed = 0
+    @State private var upRed2 = 0
+
+    // عدادات المسار الأخضر (الثاني)
+    @State private var leftGreen = 0
+    @State private var upGreen = 0
+    @State private var leftGreen2 = 0
+
+    @State private var rightCount = 0
+    @State private var leftCount = 0
+
+    @State private var upCount = 0
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geo in
                 VStack(spacing: 0) {
                     Spacer(minLength: 150)
@@ -30,12 +41,12 @@ struct question41: View {
                             .aspectRatio(1, contentMode: .fit)
                             .frame(width: geo.size.width * 0.78, height: geo.size.width * 0.78)
                             .padding(.vertical, 10)
-                        // السيارة (مكانها متحكم فيه من carPosition)
+                        // السيارة
                         Image("boysincar")
                             .resizable()
                             .frame(width: 80, height: 60)
                             .offset(x: carPosition.x, y: carPosition.y)
-                        // رسالة الفوز فوق السيارة مباشرة
+                        // رسالة الفوز
                         if hasWon {
                             VStack(spacing: 8) {
                                 Text("🎉 مبروك، وصلت للسيارة!")
@@ -45,29 +56,33 @@ struct question41: View {
                                     .padding(.vertical, 10)
                                     .background(Color.green.opacity(0.95))
                                     .cornerRadius(16)
-                                Button("حسناً") {
-                                    playerOffset = CGPoint(x: 0, y: 120) // يرجع الصبيان لنقطة البداية
-                                    hasWon = false
-                                }
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.blue)
-                                .padding(.top, 2)
                             }
-                            .offset(x: carPosition.x, y: carPosition.y - 60) // فوق السيارة مباشرة
+                            .offset(x: carPosition.x, y: carPosition.y - 60)
                             .zIndex(2)
+                            // الانتقال التلقائي بعد نصف ثانية
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                                    onNext()
+                                }
+                            }
                         }
-                        // الصبيان (مكانهم متحكم فيه من playerOffset)
+                        // الصبيان
                         Image("boys")
                             .resizable()
                             .frame(width: 60, height: 60)
                             .offset(x: playerOffset.x, y: playerOffset.y)
                             .animation(.easeInOut, value: playerOffset)
                     }
-                    // أزرار التحكم
+                    // أزرار الأسهم الأربعة تحت الصبيان مباشرة
                     VStack(spacing: -8) {
                         HStack {
                             Spacer()
-                            Button(action: { move(dx: 0, dy: -30) }) {
+                            Button(action: {
+                                if rightCount == 17 && upCount < 36 && leftCount == 0 {
+                                    playerOffset.y -= 10
+                                    upCount += 1
+                                }
+                            }) {
                                 Image("arrowup22")
                                     .resizable()
                                     .frame(width: 48, height: 48)
@@ -75,13 +90,27 @@ struct question41: View {
                             Spacer()
                         }
                         HStack {
-                            Button(action: { move(dx: -30, dy: 0) }) {
+                            Button(action: {
+                                if rightCount == 17 && upCount == 36 && leftCount < 17 {
+                                    playerOffset.x -= 10
+                                    leftCount += 1
+                                    // شرط الفوز بعد آخر خطوة يسار
+                                    if leftCount == 17 {
+                                        hasWon = true
+                                    }
+                                }
+                            }) {
                                 Image("arrowleft")
                                     .resizable()
                                     .frame(width: 48, height: 48)
                             }
                             Spacer().frame(width: 48)
-                            Button(action: { move(dx: 30, dy: 0) }) {
+                            Button(action: {
+                                if rightCount < 17 && upCount == 0 && leftCount == 0 {
+                                    playerOffset.x += 10
+                                    rightCount += 1
+                                }
+                            }) {
                                 Image("arrowright")
                                     .resizable()
                                     .frame(width: 48, height: 48)
@@ -89,7 +118,12 @@ struct question41: View {
                         }
                         HStack {
                             Spacer()
-                            Button(action: { move(dx: 0, dy: 30) }) {
+                            Button(action: {
+                                if upCount > 0 {
+                                    playerOffset.y += 10
+                                    upCount -= 1
+                                }
+                            }) {
                                 Image("arrowdown")
                                     .resizable()
                                     .frame(width: 48, height: 48)
@@ -105,32 +139,8 @@ struct question41: View {
             }
         }
     }
-
-    // منطق الحركة والفوز (مكان السيارة متغير)
-    func move(dx: CGFloat, dy: CGFloat) {
-        let newX = playerOffset.x + dx
-        let newY = playerOffset.y + dy
-
-        // تحقق من الحدود
-        if newX < minX || newX > maxX || newY < minY || newY > maxY {
-            playerOffset = CGPoint(x: 0, y: 120) // يرجع الصبيان لنقطة البداية
-            return
-        }
-
-        // تحقق من الفوز (الوصول للسيارة)
-        let playerRect = CGRect(x: newX - 30, y: newY - 30, width: 60, height: 60)
-        let carRect = CGRect(x: carPosition.x - 30, y: carPosition.y - 30, width: 60, height: 60)
-        if playerRect.intersects(carRect) {
-            hasWon = true
-            return
-        }
-
-        // إذا الحركة مسموحة
-        playerOffset = CGPoint(x: newX, y: newY)
-    }
 }
 
 #Preview {
     question41()
 }
-

@@ -1,63 +1,85 @@
-//
-//  Question48.swift
-//  MyGame
-//
-//  Created by Sahar Otiyn on 30/10/1446 AH.
-//
-
 import SwiftUI
 
 struct Question48: View {
-    // الموقع الحالي للتنورة (لتغيير موقعها عند السحب)
+    @State private var skipCount = 0
     @State private var skirtPosition = CGSize(width: 150, height: 250)
-    
+    private let originalPosition = CGSize(width: 150, height: 250)
+    @State private var showCheckmark = false
+    @State private var soundPlayed = false // علشان ما يتكرر الصوت كل مرة
+    @State private var pageNumber: String = "٤٨"
+    var onNext: () -> Void = {} // متغير الانتقال
     var body: some View {
-        VStack {
-            Text("ساعد الفتى المسكين")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.bottom, -50)
-                .padding(.top, 60)
-            
-            ZStack {
-                // صورة حمام النساء
-                Image("men") // تأكد أن صورة حمام النساء موجودة في الـ Assets
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 300, height: 300)
-                    .padding(.leading, 200)
-                
-                Image("men") // تأكد أن صورة حمام النساء موجودة في الـ Assets
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 300, height: 300)
-                    .padding(.leading, -200)
-                // صورة التنورة
-                Image("women") // تأكد من وجود صورة التنورة في الـ Assets
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 150)
-                    .padding(.top, 400)
-                    .position(x: skirtPosition.width, y: skirtPosition.height) // تحديد موقع التنورة
-                
-                // إضافة خاصية السحب (Drag)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                // تحديث الموقع عند السحب
-                                self.skirtPosition = value.translation
-                            }
-                    )
-                
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
+            VStack {
+                Text("ساعد الولد يروح الحمام")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.bottom, -50)
+                    .padding(.top, 40)
+
+                ZStack {
+                    Image("door")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 400, height: 400)
+
+                    Image("rectan")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 10)
+                        .padding(.top, -121)
+                        .padding(.horizontal, -69)
+                        .position(x: skirtPosition.width, y: skirtPosition.height)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    self.skirtPosition = CGSize(
+                                        width: originalPosition.width + value.translation.width,
+                                        height: originalPosition.height + value.translation.height
+                                    )
+
+                                    let distance = hypot(
+                                        skirtPosition.width - originalPosition.width,
+                                        skirtPosition.height - originalPosition.height
+                                    )
+
+                                    if distance > 50 {
+                                        withAnimation {
+                                            showCheckmark = true
+                                        }
+                                        if !soundPlayed {
+                                            playSound(for: true)
+                                            soundPlayed = true
+                                            // الانتقال التلقائي بعد نصف ثانية
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                                                onNext()
+                                            }
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            showCheckmark = false
+                                        }
+                                        soundPlayed = false
+                                    }
+                                }
+                        )
+
+                    if showCheckmark {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.green)
+                            .position(x: 200, y: 100)
+                            .transition(.scale)
+                    }
+                }
             }
         }
     }
 }
+
 struct Question48_Previews: PreviewProvider {
     static var previews: some View {
         Question48()
     }
 }
-
-
-

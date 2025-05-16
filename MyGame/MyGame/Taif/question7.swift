@@ -1,8 +1,8 @@
-
 import SwiftUI
 
 struct question7: View {
     @State private var skipCount = 2
+    var onNext: () -> Void   // أضف هذا المتغير
 
     var body: some View {
         let answers = [
@@ -11,18 +11,20 @@ struct question7: View {
             "النمل يقولك يا شطور", // <-- هذا هو الصحيح
             "تنطرد لانك كثير"
         ]
-        let correctAnswerIndex = 2 // <-- عدلنا هنا ليطابق الخيار الصحيح
+        let correctAnswerIndex = 2
         let questionText = "اذا فزت بسباق نمل وش بيصير؟"
+
         UIMult(
             skipCont: $skipCount,
             answers: answers,
-            correctIndex: correctAnswerIndex,
+            correctAnswerIndex: correctAnswerIndex,
             questionText: questionText,
-            questionNumber: 7
+            questionNumber: "٧",
+            onCorrect: onNext // مرر الدالة هنا
         )
     }
 }
 
 #Preview {
-    question7()
+    question7(onNext: {})
 }

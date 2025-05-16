@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import SwiftUI
 
 struct question21: View {
@@ -13,28 +6,17 @@ struct question21: View {
     @State private var dragOffset: CGSize = .zero
     @State private var isDragging = false
     @State private var camelFrames: [CGRect] = Array(repeating: .zero, count: 4)
-
+    @State private var pageNumber: String = "٢١"
     let correctIndex = 2
+    var onNext: () -> Void = {}
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
-            VStack(spacing: 32) {
-                Spacer().frame(height: 40)
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
+            VStack(spacing: 0) {
+               
 
                 // رقم السؤال في الدائرة الزرقاء
-                HStack {
-                    Image("PAGENUMBER")
-                        .resizable()
-                        .frame(width: 42, height: 42)
-                        .overlay(
-                            Text("٢١")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.white)
-                        )
-                        .padding(.leading, 32)
-                    Spacer()
-                }
-                .padding(.top, 8)
+               
 
                 // نص السؤال مع كلمة "الوضحى" في النهاية وقابلة للسحب والتحريك
                 HStack(spacing: 8) {
@@ -45,7 +27,9 @@ struct question21: View {
                         dragOffset: $dragOffset,
                         isDragging: $isDragging,
                         droppedIndex: $droppedIndex,
-                        camelFrames: $camelFrames
+                        camelFrames: $camelFrames,
+                        correctIndex: correctIndex,
+                        onNext: onNext
                     )
                 }
                 .padding(.top, 16)
@@ -118,6 +102,8 @@ struct DraggableWord: View {
     @Binding var isDragging: Bool
     @Binding var droppedIndex: Int?
     @Binding var camelFrames: [CGRect]
+    var correctIndex: Int
+    var onNext: () -> Void = {}
 
     var body: some View {
         Text("الوضحى")
@@ -144,6 +130,12 @@ struct DraggableWord: View {
                         for (i, frame) in camelFrames.enumerated() {
                             if frame.contains(wordCenter) {
                                 droppedIndex = i
+                                if i == correctIndex {
+                                    // الانتقال التلقائي بعد نصف ثانية
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        onNext()
+                                    }
+                                }
                             }
                         }
                         dragOffset = .zero
@@ -153,5 +145,5 @@ struct DraggableWord: View {
 }
 
 #Preview {
-    question21()
+    question21(onNext: {})
 }

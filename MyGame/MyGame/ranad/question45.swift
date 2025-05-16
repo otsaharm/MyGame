@@ -20,6 +20,7 @@ struct Question45: View {
     // Adjustable background offsets
     let backgroundOffsetX: CGFloat = -1
     let backgroundOffsetY: CGFloat = 50 // Move background 30 points down
+    var onNext: () -> Void = {} // متغير الانتقال
     
     var body: some View {
         GeometryReader { geo in
@@ -35,7 +36,15 @@ struct Question45: View {
                     answerText(index: i, fontSize: geo.size.width * 0.09)
                         .position(x: geo.size.width * positions[i].x, y: geo.size.height * positions[i].y)
                         .onTapGesture {
-                            if selected == nil { selected = i }
+                            if selected == nil {
+                                selected = i
+                                if i == correctIndex {
+                                    // الانتقال التلقائي بعد نصف ثانية
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                                        onNext()
+                                    }
+                                }
+                            }
                         }
                 }
                 // Show checkmark if correct answer is selected
@@ -62,3 +71,4 @@ struct Question45: View {
 #Preview {
     Question45()
 } 
+ 
