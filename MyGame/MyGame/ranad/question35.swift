@@ -10,13 +10,13 @@ struct Question35: View {
     ]
     let correctIndex = 3
     let questionText = "اذا حطيت حبة طماطم في البحر وش بيصير لها ؟"
-    let questionNumber = 35
+    let questionNumber = "٣٥"
     
     var body: some View {
         UIMult(
-            skipCont: $skipCont,
+            skipCont: $skipCont, // ✅ تم تصحيحه هنا
             answers: answers,
-            correctIndex: correctIndex,
+            correctAnswerIndex: correctIndex,
             questionText: questionText,
             questionNumber: questionNumber
         )

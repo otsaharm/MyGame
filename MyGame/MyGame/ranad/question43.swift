@@ -6,16 +6,16 @@ struct Question43: View {
     @State private var bombShake: CGFloat = 0.0
     @State private var numberScale: CGFloat = 1.0
     @State private var timer: Timer? = nil
+    @State private var pageNumber: String = "٤٣"
     @State private var skipCount: Int = 0
-    
     // Arabic numerals for 6 to 1
     let arabicNumbers = [6: "٦", 5: "٥", 4: "٤", 3: "٣", 2: "٢", 1: "١"]
     
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             ZStack {
-                VStack(spacing: 0) {
-                    Spacer().frame(height: 120) // Space from top
+                VStack {
+                     // Space from top
                     // Question
                     Text("فكر بسرعه !!!")
                         .font(.system(size: 32, weight: .bold))

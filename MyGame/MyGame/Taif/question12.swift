@@ -6,7 +6,7 @@ struct question12: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var skipCount = 0
     @State private var selectedIndex: Int? = nil
-
+    @State private var pageNumber: String = "١٢"
     let answers = [
         "ميو ميو ميو",    // الصحيحة
         "ميو ميو ميو ميو",
@@ -18,24 +18,12 @@ struct question12: View {
     let questionNumber = 12
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
                 Spacer().frame(height: 40)
 
                 // رقم السؤال في الدائرة الزرقاء
-                HStack {
-                    Image("PAGENUMBER")
-                        .resizable()
-                        .frame(width: 42, height: 42)
-                        .overlay(
-                            Text("١٢")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.white)
-                        )
-                        .padding(.leading, 32)
-                    Spacer()
-                }
-                .padding(.top, 8)
+                
 
                 // صورة القطة (تتغير بعد 6 ثوانٍ)
                 if showClosedCat {

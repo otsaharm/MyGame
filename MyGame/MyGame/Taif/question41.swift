@@ -18,9 +18,9 @@ struct question41: View {
     let maxX: CGFloat = 180
     let minY: CGFloat = -400
     let maxY: CGFloat = 120
-
+    @State private var pageNumber: String = "٤١"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geo in
                 VStack(spacing: 0) {
                     Spacer(minLength: 150)

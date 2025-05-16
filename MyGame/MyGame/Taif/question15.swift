@@ -9,7 +9,7 @@ struct question15: View {
     @State private var phase: Int = 0 // 0: أزرق، 1: أحمر
     @State private var showCorrect = false
     @State private var timer: Timer?
-
+    @State private var pageNumber: String = "١٥"
     // ترتيب الدوائر: أخضر - أحمر - أزرق - أصفر
     let colorImages = ["greencircle", "redcircle", "bluecircle", "yellowcircle"]
 
@@ -19,7 +19,7 @@ struct question15: View {
     }
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
                 Spacer().frame(height: 100) // زِد القيمة هنا لإنزال كل شيء أكثر
 

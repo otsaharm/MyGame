@@ -8,9 +8,9 @@ struct question6: View {
     @State private var cupCount: Int = 0
     @State private var showResult: String? = nil
     @State private var skipCount: Int = 0
-
+    @State private var pageNumber: String = "٦"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 20) {
                 Spacer(minLength: 40)
 

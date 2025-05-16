@@ -106,3 +106,4 @@ struct Question22: View {
 #Preview {
     Question22()
 } 
+ 

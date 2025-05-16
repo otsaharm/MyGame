@@ -5,7 +5,7 @@ struct question8: View {
     @State private var answerStep = 0
     @State private var showCorrect = false
     @State private var showWrong = false
-
+    @State private var pageNumber: String = "٨"
     // الحروف المطلوبة بالترتيب
     let letters = ["م", "و", "ز"]
     // ترتيب الخيارات: "مثو" - "زكر" - "وبير" - "تين"
@@ -24,7 +24,7 @@ struct question8: View {
     ]
 
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
                 Spacer()
                 Text("ايش هذا ؟")

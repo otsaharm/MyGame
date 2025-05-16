@@ -6,9 +6,9 @@ struct question26: View {
     @State private var isDropped = false
     @State private var skipCount = 0
     @State private var offset = CGSize.zero
-
+    @State private var pageNumber: String = "٢٦"
     var body: some View {
-        UIforAll(skipCount: $skipCount) {
+        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 32) {
                 Spacer().frame(height: 40)
 
