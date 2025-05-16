@@ -12,6 +12,7 @@ struct UIMult: View {
     @State private var skipCount: Int = 0
     @State private var showHomeConfirmation = false
     @State private var navigateToStartPage = false
+    @State private var remainingHearts = 3
     let maxSkips = 4
 
     var skipBarImageName: String {
@@ -39,7 +40,7 @@ struct UIMult: View {
                         }
                         Spacer()
                         HStack(spacing: 4) {
-                            ForEach(0..<3) { _ in
+                            ForEach(0..<remainingHearts, id: \.self) { _ in
                                 Image("HEART")
                                     .resizable()
                                     .frame(width: 25, height: 25)
@@ -139,6 +140,11 @@ struct UIMult: View {
     func answerButton(index: Int) -> some View {
         Button(action: {
             selectedAnswer = index
+            if index != correctAnswerIndex {
+                withAnimation {
+                    remainingHearts = max(0, remainingHearts - 1)
+                }
+            }
             playSound(for: index == correctAnswerIndex) // صوت الإجابة
         }) {
             ZStack {
