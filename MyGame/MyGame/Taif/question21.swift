@@ -7,39 +7,43 @@ struct question21: View {
     @State private var isDragging = false
     @State private var camelFrames: [CGRect] = Array(repeating: .zero, count: 4)
     @State private var pageNumber: String = "٢١"
-    let correctIndex = 2
+    @State private var camelImages: [String] = ["camel1", "camel2", "camel3", "camel4"]
+    @State private var wordFrame: CGRect = .zero
+    @State private var hasAnswered = false
     var onNext: () -> Void = {}
 
     var body: some View {
         UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             VStack(spacing: 0) {
-               
-
-                // رقم السؤال في الدائرة الزرقاء
-               
-
-                // نص السؤال مع كلمة "الوضحى" في النهاية وقابلة للسحب والتحريك
+                // ✅ ترتيب السؤال: وين الوضحى؟ من بين المجاهيم
                 HStack(spacing: 8) {
-                    Text("من بين المجاهيم وين")
+                    Text("وين؟")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.black)
+
                     DraggableWord(
                         dragOffset: $dragOffset,
                         isDragging: $isDragging,
                         droppedIndex: $droppedIndex,
                         camelFrames: $camelFrames,
-                        correctIndex: correctIndex,
+                        camelImages: $camelImages,
+                        wordFrame: $wordFrame,
+                        hasAnswered: $hasAnswered,
                         onNext: onNext
                     )
+
+                    Text(" من بين المجاهيم")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.black)
                 }
                 .padding(.top, 16)
                 .padding(.horizontal, 16)
 
-                // شبكة الجمال (2x2) بحجم أكبر
+                // شبكة الجمال
                 CamelsGrid(
                     droppedIndex: $droppedIndex,
                     camelFrames: $camelFrames,
-                    correctIndex: correctIndex
+                    camelImages: $camelImages
                 )
                 .frame(height: 400)
 
@@ -49,11 +53,11 @@ struct question21: View {
     }
 }
 
-// شبكة الجمال مع حفظ مواقعها
+// شبكة الجمال
 struct CamelsGrid: View {
     @Binding var droppedIndex: Int?
     @Binding var camelFrames: [CGRect]
-    let correctIndex: Int
+    @Binding var camelImages: [String]
 
     var body: some View {
         GeometryReader { geo in
@@ -73,15 +77,10 @@ struct CamelsGrid: View {
 
     func camelView(index: Int, geo: GeometryProxy) -> some View {
         GeometryReader { camelGeo in
-            Image(droppedIndex == index && index == correctIndex ? "whitecamel" : "camel")
+            Image(camelImages[index])
                 .resizable()
                 .frame(width: 160, height: 160)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(droppedIndex == index ? Color.green : Color.clear, lineWidth: 3)
-                )
                 .onAppear {
-                    // حفظ موقع الجمل في مصفوفة camelFrames
                     DispatchQueue.main.async {
                         camelFrames[index] = camelGeo.frame(in: .global)
                     }
@@ -96,13 +95,15 @@ struct CamelsGrid: View {
     }
 }
 
-// كلمة "الوضحى" القابلة للسحب والتحريك
+// كلمة "الوضحى" القابلة للسحب
 struct DraggableWord: View {
     @Binding var dragOffset: CGSize
     @Binding var isDragging: Bool
     @Binding var droppedIndex: Int?
     @Binding var camelFrames: [CGRect]
-    var correctIndex: Int
+    @Binding var camelImages: [String]
+    @Binding var wordFrame: CGRect
+    @Binding var hasAnswered: Bool
     var onNext: () -> Void = {}
 
     var body: some View {
@@ -114,30 +115,49 @@ struct DraggableWord: View {
                     .fill(isDragging ? Color.blue.opacity(0.2) : Color.clear)
             )
             .offset(dragOffset)
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .onAppear {
+                            DispatchQueue.main.async {
+                                wordFrame = geo.frame(in: .global)
+                            }
+                        }
+                        .onChange(of: dragOffset) { _ in
+                            DispatchQueue.main.async {
+                                wordFrame = geo.frame(in: .global)
+                            }
+                        }
+                }
+            )
             .gesture(
                 DragGesture()
                     .onChanged { value in
+                        guard !hasAnswered else { return }
                         dragOffset = value.translation
                         isDragging = true
                     }
                     .onEnded { value in
+                        guard !hasAnswered else { return }
                         isDragging = false
-                        // حساب مركز الكلمة بعد السحب
+
                         let wordCenter = CGPoint(
-                            x: UIScreen.main.bounds.width / 2 + dragOffset.width,
-                            y: 180 + dragOffset.height // 180 تقريبية حسب مكان الكلمة
+                            x: wordFrame.midX + dragOffset.width,
+                            y: wordFrame.midY + dragOffset.height
                         )
+
                         for (i, frame) in camelFrames.enumerated() {
                             if frame.contains(wordCenter) {
                                 droppedIndex = i
-                                if i == correctIndex {
-                                    // الانتقال التلقائي بعد نصف ثانية
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                        onNext()
-                                    }
+                                camelImages[i] = "whitecamel"
+                                hasAnswered = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    onNext()
                                 }
+                                break
                             }
                         }
+
                         dragOffset = .zero
                     }
             )
@@ -147,3 +167,4 @@ struct DraggableWord: View {
 #Preview {
     question21(onNext: {})
 }
+

@@ -1,58 +1,55 @@
 import SwiftUI
 
 struct StartPage: View {
-    @State private var goToVideo1 = false
-    var onStart: () -> Void = {} // أضف هذا المتغير
+    var onStart: () -> Void = {}
+    var onShowVideo: () -> Void = {}
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.white.edgesIgnoringSafeArea(.all)
+        ZStack {
+            Color.white.edgesIgnoringSafeArea(.all)
 
-                VStack {
-                    Button(action: {
-                        goToVideo1 = true
-                    }) {
-                        Image("video")
-                            .font(.largeTitle)
-                            .foregroundColor(.orange)
-                            .padding()
-                            .clipShape(Circle())
-                    }
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    .padding()
-
-                    Image("habbash2")
-                        .frame(width: 300, height: 255)
-                        .padding(.top)
-
-                    Button(action: {
-                        onStart() // استدعاء onStart عند الضغط على ابدأ
-                    }) {
-                        Image("Ebda")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 290)
-                            .padding(.top, -210)
-                    }
-                    Button(action: {
-                        onStart() // استدعاء onStart عند الضغط على استمر
-                    }) {
-                        Image("Eas")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 80)
-                            .padding(.top, 10)
-                    }
-                    Spacer()
+            VStack {
+                // زر الفيديو (يستدعي onShowVideo)
+                Button(action: {
+                    onShowVideo()
+                }) {
+                    Image("video")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                        .padding()
+                        .clipShape(Circle())
                 }
-                NavigationLink(destination: Video1(), isActive: $goToVideo1) {
-                    EmptyView()
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding()
+
+                Image("habbash2")
+                    .frame(width: 300, height: 255)
+                    .padding(.top)
+
+                Button(action: {
+                    onStart()
+                }) {
+                    Image("Ebda")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 290)
+                        .padding(.top, -210)
                 }
+                Button(action: {
+                    onStart()
+                }) {
+                    Image("Eas")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 80)
+                        .padding(.top, 10)
+                }
+                Spacer()
             }
         }
     }
 }
+
 struct StartPage_Previews: PreviewProvider {
     static var previews: some View {
         StartPage()

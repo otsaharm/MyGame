@@ -7,6 +7,7 @@ struct UIMult: View {
     let questionText: String
     let questionNumber: String
     var imageName: String? = nil
+    var showColorHints: Bool = false // ✅ مضاف لدعم التلميحات اللونية
     var onCorrect: () -> Void = {}
 
     @State private var selectedAnswer: Int? = nil
@@ -101,6 +102,7 @@ struct UIMult: View {
                         Image(skipBarImageName)
                             .resizable()
                             .frame(width: 216, height: 52)
+
                         let slotOffsets: [CGFloat] = [87, 29, -20, -80]
                         if skipCount < maxSkips {
                             Button(action: {
@@ -108,7 +110,7 @@ struct UIMult: View {
                                     if skipCount < maxSkips {
                                         skipCount += 1
                                         skipCont += 1
-                                        playSound(for: true) // صوت التخطي
+                                        playSound(for: true)
                                     }
                                 }
                             }) {
@@ -138,27 +140,41 @@ struct UIMult: View {
         }
     }
 
-    // دالة زر الإجابة مع منطق الانتقال التلقائي عند الإجابة الصحيحة
+    // ✅ زر الإجابة مع منطق عرض التلميحات اللونية
     func answerButton(index: Int) -> some View {
         Button(action: {
-            selectedAnswer = index
+            guard !showColorHints else { return }
 
-            // الانتقال التلقائي عند الإجابة الصحيحة
-            if index == correctAnswerIndex {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    onCorrect()
-                }
-            }
+            if selectedAnswer == nil {
+                selectedAnswer = index
 
-            if index != correctAnswerIndex {
-                withAnimation {
-                    remainingHearts = max(0, remainingHearts - 1)
+                if index == correctAnswerIndex {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        onCorrect()
+                    }
+                } else {
+                    withAnimation {
+                        remainingHearts = max(0, remainingHearts - 1)
+                    }
                 }
+
+                playSound(for: index == correctAnswerIndex)
             }
-            playSound(for: index == correctAnswerIndex)
         }) {
             ZStack {
-                if selectedAnswer == index && index == correctAnswerIndex {
+                if showColorHints {
+                    if index == correctAnswerIndex {
+                        Image("BUTTON.CORRECT")
+                            .resizable()
+                            .frame(width: 151.68, height: 81)
+                    } else {
+                        Image("BUTTON.REGULAR")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(Color.red.opacity(0.7))
+                            .frame(width: 151.68, height: 81)
+                    }
+                } else if selectedAnswer == index && index == correctAnswerIndex {
                     Image("BUTTON.CORRECT")
                         .resizable()
                         .frame(width: 151.68, height: 81)
@@ -169,25 +185,11 @@ struct UIMult: View {
                 }
 
                 let answer = answers[index]
-                if answer == "∞" {
-                    Text("∞")
-                        .font(.system(size: 100, weight: .heavy))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 8)
-                } else if answer == "مرة كبير" {
-                    Text("مرة كبير")
-                        .font(.system(size: 42, weight: .heavy))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 8)
-                } else {
-                    Text(answer)
-                        .font(.system(size: 27, weight: .bold))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 8)
-                }
+                Text(answer)
+                    .font(.system(size: 27, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 8)
             }
         }
         .buttonStyle(PlainButtonStyle())
@@ -197,9 +199,11 @@ struct UIMult: View {
 #Preview {
     UIMult(
         skipCont: .constant(0),
-        answers: ["مرة كبير", "كبير", "∞", "راسي"],
-        correctAnswerIndex: 2,
-        questionText: "اجابة هذا السؤال كبيرة مره",
-        questionNumber: "٢٣"
+        answers: ["", "", "", ""],
+        correctAnswerIndex: 3,
+        questionText: "ناظر زين!!",
+        questionNumber: "٤",
+        showColorHints: true // ✅ جرب عرض الألوان في البداية
     )
 }
+
