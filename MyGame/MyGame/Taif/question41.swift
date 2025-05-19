@@ -24,7 +24,7 @@ struct question41: View {
         UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
             GeometryReader { geo in
                 VStack(spacing: 0) {
-                    Spacer(minLength: 150)
+                    Spacer(minLength: 100) // تم تقليلها من 150 إلى 100
 
                     ZStack {
                         Image("game41")
@@ -57,9 +57,9 @@ struct question41: View {
                             }
                         }
 
-                        Image("boys")
+                        Image("boy3")
                             .resizable()
-                            .frame(width: 60, height: 60)
+                            .frame(width: 40, height: 40)
                             .offset(x: playerOffset.x, y: playerOffset.y)
                             .animation(.easeInOut, value: playerOffset)
                     }
@@ -73,17 +73,17 @@ struct question41: View {
                                 }
 
                                 if currentPath == "red" {
-                                    if redUp1 < 3 {
+                                    if redUp1 < 2 {
                                         playerOffset.y -= 10
                                         redUp1 += 1
-                                    } else if redUp1 == 3 && redRight == 11 && redUp2 < 10 {
+                                    } else if redUp1 == 2 && redRight == 13 && redUp2 < 10 {
                                         playerOffset.y -= 10
                                         redUp2 += 1
                                     }
                                 }
 
                                 if currentPath == "green" {
-                                    if greenRight == 16 && greenUp < 32 && greenLeft == 0 {
+                                    if greenRight == 16 && greenUp < 31 && greenLeft == 0 {
                                         playerOffset.y -= 10
                                         greenUp += 1
                                     }
@@ -106,7 +106,7 @@ struct question41: View {
                                 }
 
                                 if currentPath == "green" {
-                                    if greenRight == 16 && greenUp == 32 && greenLeft < 14 {
+                                    if greenRight == 16 && greenUp == 31 && greenLeft < 14 {
                                         playerOffset.x -= 10
                                         greenLeft += 1
                                         if greenLeft == 14 {
@@ -131,7 +131,7 @@ struct question41: View {
                                 }
 
                                 if currentPath == "red" {
-                                    if redUp1 == 3 && redRight < 11 && redUp2 == 0 {
+                                    if redUp1 == 2 && redRight < 13 && redUp2 == 0 {
                                         playerOffset.x += 10
                                         redRight += 1
                                     }
@@ -141,7 +141,7 @@ struct question41: View {
                                     if greenRight < 16 && greenUp == 0 && greenLeft == 0 {
                                         playerOffset.x += 10
                                         greenRight += 1
-                                    } else if greenRight == 16 && greenUp == 32 && greenLeft > 0 {
+                                    } else if greenRight == 16 && greenUp == 31 && greenLeft > 0 {
                                         playerOffset.x += 10
                                         greenLeft -= 1
                                     }
@@ -181,7 +181,7 @@ struct question41: View {
                         }
                     }
                     .frame(width: 180)
-                    .padding(.top, 64)
+                    .padding(.top, 32) // تم تقليلها من 64 إلى 32
 
                     Spacer(minLength: 40)
                 }
@@ -221,4 +221,3 @@ struct question41: View {
 #Preview {
     question41()
 }
-

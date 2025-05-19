@@ -19,7 +19,7 @@ struct question6: View {
                 Text("كم عدد الفناجين؟")
                     .font(.title2)
 
-                Spacer()
+                Spacer(minLength: 50)
 
                 ZStack {
                     // فناجين ثابتة
@@ -114,20 +114,24 @@ struct question6: View {
                         showResult = "إجابة خاطئة ❌"
                     }
                 }) {
-                    Image("ok6")
+                    Image("okay")
                         .resizable()
-                        .frame(width: 100, height: 40)
+                        .frame(width: 130, height: 50)
                 }
 
-                // عرض النتيجة
-                if let result = showResult {
-                    Text(result)
-                        .font(.title2)
-                        .foregroundColor(result.contains("صح") ? .green : .red)
-                        .padding()
+                // مكان النتيجة ثابت دائماً
+                Group {
+                    if let result = showResult {
+                        Text(result)
+                            .font(.title2)
+                            .foregroundColor(result.contains("صح") ? .green : .red)
+                            .frame(height: 48)
+                    } else {
+                        Spacer().frame(height: 48)
+                    }
                 }
 
-                Spacer()
+                Spacer(minLength: 10)
             }
         }
     }

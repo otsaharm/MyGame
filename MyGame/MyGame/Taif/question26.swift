@@ -8,12 +8,11 @@ struct question26: View {
     var onNext: () -> Void = {}
 
     var body: some View {
-        UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
-            VStack(spacing: 32) {
-                Spacer().frame(height: 40)
-
-                // الدائرة الزرقاء (٢٦) قابلة للسحب
-                HStack {
+        UIforAll(
+            skipCount: $skipCount,
+            pageNumber: $pageNumber,
+            customPageNumberView: AnyView(
+                Group {
                     if !isDropped {
                         Image("PAGENUMBER")
                             .resizable()
@@ -31,10 +30,9 @@ struct question26: View {
                                     }
                                     .onEnded { value in
                                         // تحقق إذا تم الإسقاط فوق الرقم ٣٣ (حسب إحداثيات الشاشة)
-                                        if value.location.y > 180 && value.location.y < 320 &&
-                                            value.location.x > 120 && value.location.x < 260 {
+                                        if value.translation.height > 100 && value.translation.height < 300 &&
+                                            value.translation.width > 80 && value.translation.width < 200 {
                                             isDropped = true
-                                            // الانتقال التلقائي بعد نصف ثانية
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                                 onNext()
                                             }
@@ -43,11 +41,16 @@ struct question26: View {
                                         }
                                     }
                             )
-                            .padding(.leading, 32)
+                    } else {
+                        // عنصر شفاف بنفس حجم الدائرة ليحافظ على مكان النصوص
+                        Color.clear
+                            .frame(width: 42, height: 42)
                     }
-                    Spacer()
                 }
-                .padding(.top, 8)
+            )
+        ) {
+            VStack(spacing: 32) {
+                Spacer().frame(height: 40)
 
                 // نص السؤال
                 Text("كيف بتحل هذي المعادلة؟")
@@ -62,7 +65,7 @@ struct question26: View {
                     Text("١٠٠٠ +")
                         .font(.custom("BalooBhaijaan2-Medium", size: 32))
                         .foregroundColor(.black)
-                    // الرقم ٣٣ القابل للإسقاط عليه (بدون مربع أخضر)
+                    // الرقم ٣٣ القابل للإسقاط عليه
                     Text(isDropped ? "٢٦٣٣" : "٣٣")
                         .font(.custom("BalooBhaijaan2-Medium", size: 32))
                         .foregroundColor(.black)

@@ -6,14 +6,22 @@ struct UIforAll<Content: View>: View {
     let maxSkips = 4
     let content: Content
     var onHomeOverride: (() -> Void)? = nil // متغير جديد
+    var customPageNumberView: AnyView? = nil // متغير جديد لدعم تخصيص رقم الصفحة
 
     @State private var showHomeConfirmation = false
     @State private var navigateToStartPage = false
 
-    init(skipCount: Binding<Int>, pageNumber: Binding<String>, onHomeOverride: (() -> Void)? = nil, @ViewBuilder content: () -> Content) {
+    init(
+        skipCount: Binding<Int>,
+        pageNumber: Binding<String>,
+        onHomeOverride: (() -> Void)? = nil,
+        customPageNumberView: AnyView? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
         self._skipCount = skipCount
         self._pageNumber = pageNumber
         self.onHomeOverride = onHomeOverride
+        self.customPageNumberView = customPageNumberView
         self.content = content()
     }
 
@@ -34,9 +42,9 @@ struct UIforAll<Content: View>: View {
                     HStack {
                         Button(action: {
                             if let onHomeOverride = onHomeOverride {
-                                onHomeOverride() // سلوك خاص (مثلاً في السؤال العاشر)
+                                onHomeOverride()
                             } else {
-                                showHomeConfirmation = true // السلوك الافتراضي
+                                showHomeConfirmation = true
                             }
                         }) {
                             Image("BUTTON.HOME")
@@ -56,17 +64,24 @@ struct UIforAll<Content: View>: View {
                     }
                     .padding(.top, 55)
 
-                    // Page Number Display
+                    // Page Number Display (مخصص أو افتراضي)
                     HStack {
-                        Image("PAGENUMBER")
-                            .resizable()
-                            .frame(width: 42, height: 42)
-                            .overlay(
-                                Text(pageNumber)
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(.white)
-                            ) .padding(.top, 70)
-                            .padding(.leading, 32)
+                        if let customView = customPageNumberView {
+                            customView
+                                .padding(.top, 40)
+                                .padding(.leading, 32)
+                        } else {
+                            Image("PAGENUMBER")
+                                .resizable()
+                                .frame(width: 42, height: 42)
+                                .overlay(
+                                    Text(pageNumber)
+                                        .font(.system(size: 22, weight: .bold))
+                                        .foregroundColor(.white)
+                                )
+                                .padding(.top, 40)
+                                .padding(.leading, 32)
+                        }
                         Spacer()
                     }
 
@@ -74,7 +89,7 @@ struct UIforAll<Content: View>: View {
                         .frame(maxWidth: .infinity)
                         .padding(.top, 20)
 
-                    Spacer(minLength: 150)
+                    Spacer(minLength: 80)
 
                     ZStack {
                         Image(skipBarImageName)

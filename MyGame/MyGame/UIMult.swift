@@ -164,14 +164,18 @@ struct UIMult: View {
             ZStack {
                 if showColorHints {
                     if index == correctAnswerIndex {
-                        Image("BUTTON.CORRECT")
-                            .resizable()
-                            .frame(width: 151.68, height: 81)
-                    } else {
+                        // الزر الصحيح أخضر خافت
                         Image("BUTTON.REGULAR")
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundColor(Color.red.opacity(0.7))
+                            .foregroundColor(Color.green.opacity(0.5))
+                            .frame(width: 151.68, height: 81)
+                    } else {
+                        // الأزرار الخاطئة حمراء خافتة
+                        Image("BUTTON.REGULAR")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(Color.red.opacity(0.5))
                             .frame(width: 151.68, height: 81)
                     }
                 } else if selectedAnswer == index && index == correctAnswerIndex {
@@ -206,4 +210,3 @@ struct UIMult: View {
         showColorHints: true // ✅ جرب عرض الألوان في البداية
     )
 }
-

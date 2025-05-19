@@ -16,7 +16,7 @@ struct question12: View {
     let correctIndex = 0
     let questionText = "ايش قالت القطة؟"
     let questionNumber = 12
-    var onNext: () -> Void   // أضف هذا المتغير
+    var onNext: () -> Void
 
     var body: some View {
         UIforAll(skipCount: $skipCount, pageNumber: $pageNumber) {
@@ -85,7 +85,6 @@ struct question12: View {
             }
         }) {
             ZStack {
-                // استخدم صورة الزر الأخضر إذا كانت الإجابة الصحيحة ومختارة
                 if selectedIndex == index && index == correctIndex {
                     Image("BUTTON.CORRECT")
                         .resizable()
@@ -101,9 +100,12 @@ struct question12: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)
             }
+            // يمنع الطبقة الشفافة على الأزرار بعد الاختيار
+            .opacity(1)
         }
+        // فقط الزر المختار يبقى قابل للضغط بعد الاختيار
+        .allowsHitTesting(selectedIndex == nil)
         .buttonStyle(PlainButtonStyle())
-        .disabled(selectedIndex != nil) // يمنع الضغط بعد الاختيار
     }
 
     // تشغيل صوت القطة مرة واحدة فقط
